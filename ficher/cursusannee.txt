@@ -1,0 +1,63 @@
+2015;Semestre01;LFF11004;Semestre1 Etudes Françaises;123;2016-01-19 18:05:39 
+2015;Module;LFF11104;Grammaire I;123;2016-01-19 18:05:39 
+2015;Module;LFF11204;Phonétique;123;2016-01-19 18:05:39 
+2015;Module;LFF11304;Typologie des textes narratifs;123;2016-01-19 18:05:39 
+2015;Module;LFF11404;initiation aux genres dramatiques;123;2016-01-19 18:05:39 
+2015;Module;LFF11504;Histoire des idées (Moyen âge-17ème siècle);123;2016-01-19 18:05:39 
+2015;Module;LFF11604;Les grands mythes;123;2016-01-19 18:05:39 
+2015;Module;LFF11704;Langues I;123;2016-01-19 18:05:39 
+2015;Semestre02;LFF12004;Semestre2 Etudes Françaises;123;2016-01-19 18:05:39 
+2015;Module;LFF12104;Grammaire II;123;2016-01-19 18:05:39 
+2015;Module;LFF12204;Lexicographie;123;2016-01-19 18:05:39 
+2015;Module;LFF12304;Catégorie du récit;123;2016-01-19 18:05:39 
+2015;Module;LFF12404;Poésie et versification;123;2016-01-19 18:05:39 
+2015;Module;LFF12504;Histoire de la littérature, histoire des idées et des arts;123;2016-01-19 18:05:39 
+2015;Module;LFF12604;Introduction à l'interculturel;123;2016-01-19 18:05:39 
+2015;Module;LFF12704;Langues II;123;2016-01-19 18:05:39 
+2015;Semestre03;LFE23004;Semestre3 English Studies;1854;2016-01-19 18:05:39 
+2015;Module;LFE23104;EXTENSIVE READING;1854;2016-01-19 18:05:39 
+2015;Module;LFE23304;GRAMMAR 3;1854;2016-01-19 18:05:39 
+2015;Module;LFE23403;PUBLIC SPEAKING AND DEBATING;1854;2016-01-19 18:05:39 
+2015;Module;LFE23504;BRITISH CULTURE AND SOCIETY/ CULTURE AND SOCIETY IN THE US;1854;2016-01-19 18:05:39 
+2015;Semestre05;LFN35004;Semestre5 Langue et Litterature Anglaises opt: Linguistique;1854;2016-01-19 18:05:39 
+2015;Module;LFN35104;Schools  of Linguistics;1854;2016-01-19 18:05:39 
+2015;Module;LFN35204;Advanced Multilingual Translation;1854;2016-01-19 18:05:39 
+2015;Semestre06;LFN36004;Semestre6 Langue et Litterature Anglaises opt: Linguistique;1854;2016-01-19 18:05:39 
+2015;Module;LFN36104;Syntax;1854;2016-01-19 18:05:39 
+2015;Module;LFN36204;PFE;1854;2016-01-19 18:05:39 
+2015;Module;LFN36304;PFE;1854;2016-01-19 18:05:39 
+2015;Module;LFN36404;Semantics and pragmatics;1854;2016-01-19 18:05:39 
+2015;Module;LFN36504;Phonology and morphology;1854;2016-01-19 18:05:39 
+2015;Module;LFN36604;Discourse Analysis;1854;2016-01-19 18:05:39 
+2015;Semestre01;LFG11004;Semestre 1 Géographie;1393;2016-01-19 18:05:39 
+2015;Module;LFG11104;Géomorphologie Générale;1393;2016-01-19 18:05:39 
+2015;Module;LFG11204;Climatologie;1393;2016-01-19 18:05:39 
+2015;Module;LFG11304;Géographie rurale;1393;2016-01-19 18:05:39 
+2015;Module;LFG11404;Géographie de population;1393;2016-01-19 18:05:39 
+2015;Module;LFG11504;Lecture des cartes topographiques;1393;2016-01-19 18:05:39 
+2015;Module;LFG11604;Histoire du Maroc;1393;2016-01-19 18:05:39 
+2015;Module;LFG11704;Langues vivantes;1393;2016-01-19 18:05:39 
+2015;Semestre02;LFG12004;Semestre 2 Géographie;1393;2016-01-19 18:05:39 
+2015;Module;LFG12104;Géomorphologie structurale;1393;2016-01-19 18:05:39 
+2015;Module;LFG12204;Biogéographie;1393;2016-01-19 18:05:39 
+2015;Module;LFG12304;Géographie économique;1393;2016-01-19 18:05:39 
+2015;Module;LFG12404;Géographie des villes;1393;2016-01-19 18:05:39 
+2015;Module;LFG12504;Lecture des documents et analyse des cartes topographiques;1393;2016-01-19 18:05:39 
+2015;Module;LFG12604;Statistiques et expression graphique;1393;2016-01-19 18:05:39 
+2015;Module;LFG12704;Langues  vivantes;1393;2016-01-19 18:05:39 
+2015;Semestre01;LFI11004;Semestre1 Etudes islamiques;523;2016-01-19 18:05:39 
+2015;Module;LFI11104;Sciences du coran 1;523;2016-01-19 18:05:39 
+2015;Module;LFI11204;Sciences du hadith 1;523;2016-01-19 18:05:39 
+2015;Module;LFI11304;Histoire de la législation islamique;523;2016-01-19 18:05:39 
+2015;Module;LFI11404;Doctrine musulmane;523;2016-01-19 18:05:39 
+2015;Module;LFI11504;Grammaire 1;523;2016-01-19 18:05:39 
+2015;Module;LFI11604;Biographie du prophète et lakhilafa islamiya;523;2016-01-19 18:05:39 
+2015;Module;LFI11704;Langue et terminologie 1;523;2016-01-19 18:05:39 
+2015;Semestre02;LFI12004;Semestre2 Etudes islamiques;523;2016-01-19 18:05:39 
+2015;Module;LFI12104;Sciences du coran 2;523;2016-01-19 18:05:39 
+2015;Module;LFI12204;Sciences du hadith2;523;2016-01-19 18:05:39 
+2015;Module;LFI12304;jurisprudence culte;523;2016-01-19 18:05:39 
+2015;Module;LFI12404;Pensée islamique;523;2016-01-19 18:05:39 
+2015;Module;LFI12504;Grammaire 2;523;2016-01-19 18:05:39 
+2015;Module;LFI12604;Introduction à l'étude des sciences humaines;523;2016-01-19 18:05:39 
+2015;Module;LFI12704;Langue et terminologie 2;523;2016-01-19 18:05:39 
