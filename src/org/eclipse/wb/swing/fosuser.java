@@ -177,7 +177,7 @@ public class fosuser {
 				cod_apogee = rs.getString("COD_ETU");
 
 				String passfos = getMD5(COD_NNE_IND);
-				System.out.println(passfos);
+				//System.out.println(passfos);
 
 				String texte = cod_apogee + ";" + cod_apogee + ";" + cod_apogee
 						+ ";" + cod_apogee + ";" + cod_apogee

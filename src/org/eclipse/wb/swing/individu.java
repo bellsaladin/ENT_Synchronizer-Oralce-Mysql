@@ -197,7 +197,8 @@ public class individu {
 				+ "ON PAYS1.COD_PAY = INDIVIDU.COD_DEP_PAY_NAI "
 				+ "WHERE INS_ADM_ETP.COD_ANU = " + dateanne
 				+ " AND a2.COD_ANU_INA = " + dateanne
-				+ " AND INS_ADM_ETP.ETA_IAE = 'E'";
+				+ " AND INS_ADM_ETP.ETA_IAE = 'E' ";
+		
 		//if(Config.TEST) selectSQL += " AND ROWNUM <= " + Config.LIMIT_NUMBER_OF_ROWS;
 		//selectSQL += " ORDER BY INDIVIDU.COD_IND";
 		System.out.println("Individu::selectSQL: " + selectSQL);
