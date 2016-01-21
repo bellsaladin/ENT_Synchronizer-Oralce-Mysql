@@ -262,7 +262,7 @@ public class cursus_annee {
 				
 			}
 			
-			if(cursus_annee.loadInFileIndividusCount == Config.LOAD_IN_FILE_LOT_QTY || String.valueOf(codeIndividu).equals(individu.listCodesIndividus.get(individu.listCodesIndividus.size() - 1)) ){
+			if(cursus_annee.loadInFileIndividusCount == Config.LOAD_IN_FILE_LOT_QTY || codeIndividu == Integer.valueOf(individu.listCodesIndividus.get(individu.listCodesIndividus.size() - 1)) ){
 				
 				try {
 					writer.close();
