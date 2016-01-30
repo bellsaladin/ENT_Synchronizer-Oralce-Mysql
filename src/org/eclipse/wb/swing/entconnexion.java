@@ -37,7 +37,7 @@ public class entconnexion {
 	    //DB_URL = "jdbc:mysql://196.200.142.7/ent";
 		//DB_URL = "jdbc:mysql://172.16.1.22/ent";
 		//PASS = "ent09050211";
-		DB_URL = "jdbc:mysql://localhost/ent_v3";
+		DB_URL = "jdbc:mysql://localhost/ent";
 		PASS = "root";
 		
 	

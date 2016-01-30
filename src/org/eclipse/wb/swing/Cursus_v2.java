@@ -19,9 +19,11 @@ import java.util.Locale;
 
 import uit.ent.synchronizer.Config;
 
-public class cursus {
-
-	private static int loadInFileIndividusCount = 0;
+public class Cursus_v2 {
+	private static Connection dbConnection = null;
+	private static Connection conn = null;
+	
+	private static int nbrOfIndividusInBatch = 0;
 	
 	private static String DB_DRIVER;
 	private static String DB_CONNECTION;
@@ -50,8 +52,11 @@ public class cursus {
 
 	private static String LIS_ELP_COD_ANU;
 	private static String LIS_ELP_COD_ANU_PLUS_1;
+	private static String LIS_ELP_COD_NEL;
 	private static String LIS_ELP_LIC_NEL;
 	private static String LIS_ELP_COD_ELP;
+	private static String LIS_ELP_COD_LSE;
+	private static String LIS_ELP_COD_ETP;
 	private static String LIS_ELP_LIB_ELP;
 	private static String LIS_COD_IND;
 	private static String not_elp;
@@ -59,7 +64,6 @@ public class cursus {
 	private static String cod_ses_elp;
 	private static String COD_NNE_IND;
 
-	private static int n;
 	private static FileWriter writer;
 	private static String txtDate;
 
@@ -84,18 +88,29 @@ public class cursus {
 				.format(new Date());
 		
 		
+		
+		int n = 0;
 		for(int codeIndividu: individu.listCodesIndividus){
-			syncIndividu(codeIndividu, datsychr);
-			//System.out.println("Cursus:Individu: "  +n);
+			if(Cursus_v2.nbrOfIndividusInBatch == 0 && n >= Config.START_FROM_INDIVIDU_NBR){ 
+				// nouveau batch(lot) d'un load infile
+				System.out.println("Cursus : New Batch (Use '" + (n)+"' in Config.START_FROM_INDIVIDU_NBR to continue sychronisation from this point) ");
+			}
+			if(n >= Config.START_FROM_INDIVIDU_NBR){
+				syncIndividu(codeIndividu, datsychr);
+				System.out.println("Cursus: Individu n° "  +n + " traité !");
+			}
 			n++;
-
 		}
+		
+		conn.close();
 
 	}
 
 	private static Connection getDBConnection() {
-
-		Connection dbConnection = null;
+		
+		if(dbConnection != null){
+			return dbConnection;
+		}
 
 		try {
 
@@ -125,17 +140,17 @@ public class cursus {
 
 	public static void syncIndividu(int codeIndividu, String datsychr) {
 		
-		if(cursus.loadInFileIndividusCount == 0){ // nouveau lot d'un load infile
-			System.out.println("Cursus Nouveau lot ");
+		if(Cursus_v2.nbrOfIndividusInBatch == 0){ // nouveau batch(lot) d'un load infile
+			System.out.println("Cursus : New Batch ");
 			try {
 				writer = new FileWriter(_Statics.workingDir.replace("\\", "/")
-						+ "/ficher/cursus.txt", false);
+						+ "/ficher/cursus_v2.txt", false);
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
 		}
 		
-		cursus.loadInFileIndividusCount++;
+		Cursus_v2.nbrOfIndividusInBatch++;
 		
 		entconnexion entcon = new entconnexion();
 		_Statics cc = new _Statics();
@@ -156,19 +171,17 @@ public class cursus {
 
 		Connection dbConnection = null;
 		PreparedStatement preparedStatement = null;
-
-		PreparedStatement preparedStatement1 = null;
-
-		Connection conn = null;
-		Statement stmt = null;
 		Statement stmt1 = null;
 
-		String selectSQL = "select LIS_ELP_COD_ANU,LIS_ELP_COD_ANU_PLUS_1,LIS_ELP_LIC_NEL,LIS_ELP_COD_ELP,LIS_ELP_LIB_ELP,LIS_COD_IND,not_elp,cod_tre_elp,cod_ses_elp from "
+		String selectSQL = "SELECT LIS_ELP_COD_ANU,LIS_ELP_COD_ANU_PLUS_1,LIS_ELP_COD_NEL,LIS_ELP_LIC_NEL,LIS_ELP_COD_ELP,LIS_ELP_COD_LSE, LIS_ELP_COD_ETP,LIS_ELP_LIB_ELP,LIS_COD_IND,not_elp,cod_tre_elp,cod_ses_elp  FROM "
 				+ "(SELECT "
 				+ "ICE.COD_ANU LIS_ELP_COD_ANU,	"
 				+ "ICE.COD_ANU+1 LIS_ELP_COD_ANU_PLUS_1, "
+				+ "NEL.COD_NEL LIS_ELP_COD_NEL,	"
 				+ "NEL.LIC_NEL LIS_ELP_LIC_NEL,	"
 				+ "ICE.COD_ELP LIS_ELP_COD_ELP,	"
+				+ "ICE.COD_LSE LIS_ELP_COD_LSE, "
+				+ "ICE.COD_ETP LIS_ELP_COD_ETP, "
 				+ "ELP.LIB_ELP LIS_ELP_LIB_ELP,	"
 				+ "IND.COD_IND LIS_COD_IND	"
 				+ "FROM	"
@@ -177,8 +190,7 @@ public class cursus {
 				+ "ELEMENT_PEDAGOGI ELP, "
 				+ "NATURE_ELP NEL,	"
 				+ "INS_ADM_ANU IAA	"
-				+ "WHERE 1=1	"
-				+ "AND (ICE.COD_IND(+)  = IND.COD_IND)	"
+				+ "WHERE (ICE.COD_IND(+)  = IND.COD_IND)	"
 				+ "AND (ICE.TEM_PRC_ICE = 'N') "
 				+ "AND (ELP.COD_ELP(+) = ICE.COD_ELP)	"
 				+ "AND (NEL.COD_NEL(+) = ELP.COD_NEL)	"
@@ -191,9 +203,12 @@ public class cursus {
 				+ codeIndividu
 				+ "AND (ICE.COD_ELP NOT LIKE 'CP%') "
 				// + "AND IND.COD_IND = '87810' "
-				+ "group by ICE.COD_ANU, "
+				+ "GROUP BY ICE.COD_ANU, "
+				+ "NEL.COD_NEL , "
 				+ "NEL.LIC_NEL , "
 				+ "ICE.COD_ELP , "
+				+ "ICE.COD_LSE, "
+				+ "ICE.COD_ETP, "
 				+ "ELP.LIB_ELP , "
 				+ "IND.COD_IND "
 				+ "ORDER BY ICE.COD_ANU DESC, "
@@ -201,7 +216,7 @@ public class cursus {
 				+ "(select cod_ind as cod_ind_res,cod_anu as cod_anu_elp,cod_elp as cod_elp_res,not_elp as not_elp,cod_tre as cod_tre_elp,cod_ses as cod_ses_elp "
 				+ "from resultat_elp "
 				+ "where TEM_NOT_RPT_ELP='N' "
-				+ "and cod_adm=1 "
+				+ "and cod_adm = 1 "
 				+ "and (not_elp is not null  OR (not_elp is null AND cod_tre = 'ABI' ) ) "
 				+ "and cod_ind= "
 				+ codeIndividu
@@ -211,13 +226,16 @@ public class cursus {
 				+ "and LIS_ELP_COD_ANU=cod_anu_elp "
 				+ "and cod_elp_res=LIS_ELP_COD_ELP "
 				+ "ORDER BY  LIS_ELP_COD_ELP ASC";
-		System.out.println("Cursus:selectSQL:" + selectSQL);
+		//System.out.println("Cursus:selectSQL:" + selectSQL);
 		try {
 			dbConnection = getDBConnection();
 			preparedStatement = dbConnection.prepareStatement(selectSQL);
+			
 			try {
-				Class.forName("com.mysql.jdbc.Driver");
-				conn = DriverManager.getConnection(DB_URL, USER, PASS);
+				if(conn == null){
+					Class.forName("com.mysql.jdbc.Driver");
+					conn = DriverManager.getConnection(DB_URL, USER, PASS);
+				}
 				stmt1 = conn.createStatement();
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
@@ -228,8 +246,11 @@ public class cursus {
 
 				LIS_ELP_COD_ANU = rs.getString("LIS_ELP_COD_ANU");
 				LIS_ELP_COD_ANU_PLUS_1 = rs.getString("LIS_ELP_COD_ANU_PLUS_1");
+				LIS_ELP_COD_NEL = rs.getString("LIS_ELP_COD_NEL");
 				LIS_ELP_LIC_NEL = rs.getString("LIS_ELP_LIC_NEL");
 				LIS_ELP_COD_ELP = rs.getString("LIS_ELP_COD_ELP");
+				LIS_ELP_COD_LSE = rs.getString("LIS_ELP_COD_LSE");
+				LIS_ELP_COD_ETP = rs.getString("LIS_ELP_COD_ETP");
 				LIS_ELP_LIB_ELP = rs.getString("LIS_ELP_LIB_ELP").replaceAll(
 						"[\r\n]+", "");
 				LIS_COD_IND = rs.getString("LIS_COD_IND");
@@ -237,8 +258,8 @@ public class cursus {
 				cod_tre_elp = rs.getString("cod_tre_elp");
 				cod_ses_elp = rs.getString("cod_ses_elp");
 
-				String texte = LIS_ELP_COD_ANU + ";" + LIS_ELP_COD_ANU_PLUS_1
-						+ ";" + LIS_ELP_LIC_NEL + ";" + LIS_ELP_COD_ELP + ";"
+				String texte = LIS_ELP_COD_ANU + ";" + LIS_ELP_COD_ANU_PLUS_1 + ";" + LIS_ELP_COD_NEL
+						+ ";" + LIS_ELP_LIC_NEL + ";" + LIS_ELP_COD_ELP + ";" + LIS_ELP_COD_LSE + ";" + LIS_ELP_COD_ETP + ";"
 						+ LIS_ELP_LIB_ELP + ";" + LIS_COD_IND + ";" + not_elp
 						+ ";" + cod_tre_elp + ";" + cod_ses_elp + ";"
 						+ datsychr + " \n";
@@ -254,7 +275,7 @@ public class cursus {
 
 			}
 
-			if(cursus.loadInFileIndividusCount == Config.LOAD_IN_FILE_BATCH_QTY || codeIndividu == Integer.valueOf(individu.listCodesIndividus.get(individu.listCodesIndividus.size() - 1)) ){
+			if(Cursus_v2.nbrOfIndividusInBatch == Config.LOAD_IN_FILE_BATCH_QTY || codeIndividu == Integer.valueOf(individu.listCodesIndividus.get(individu.listCodesIndividus.size() - 1)) ){
 				
 				try {
 					writer.close();
@@ -263,30 +284,30 @@ public class cursus {
 					e.printStackTrace();
 				}
 	
-				System.out.println("Cursus Insertion lot ");
+				System.out.println("Cursus : Insertion of Batch ");
 				
-				PreparedStatement Pindividu = conn
+				PreparedStatement statementLoadInfile = conn
 						.prepareStatement("LOAD DATA LOCAL INFILE '"
 								+ _Statics.workingDir.replace("\\", "/")
-								+ "/ficher/cursus.txt' "
-								+ "INTO TABLE cursusresultat "
+								+ "/ficher/cursus_v2.txt' "
+								+ "INTO TABLE cursusresultat_v2 "
 								+ "FIELDS "
 								+ "TERMINATED BY ';' "
 								+ "ESCAPED BY '\\\\' LINES STARTING BY '' "
 								+ "TERMINATED BY '\\n' "
-								+ " (cod_annee, cod_annee2, lib_lse, cod_elp, lib_elp, cod_ind, note, resultat, cod_session, datesync) ");
-				Pindividu.executeUpdate();
-				cursus.loadInFileIndividusCount = 0;
+								+ " (cod_annee, cod_annee2, cod_nel, lib_lse, cod_elp, cod_lse, cod_etp, lib_elp, cod_ind, note, resultat, cod_session, datesync) ");
+				statementLoadInfile.executeUpdate();
+				statementLoadInfile.close();
+				Cursus_v2.nbrOfIndividusInBatch = 0;
 			}
 			//System.out.println("Fin Insertion Cursus");
-			
-			conn.close();
+			preparedStatement.close();
 
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println("Exception : " + e.getMessage());
 		} finally {
-
 		}
 	}
 

@@ -86,7 +86,7 @@ public class cursus_annee {
 		for(int codeIndividu: individu.listCodesIndividus){
 			
 			
-			youness(codeIndividu, datsychr, dateanne);
+			syncIndividu(codeIndividu, datsychr, dateanne);
 			System.out.println("Cursus annee :"+ n);
 			n++;
 		}
@@ -123,7 +123,7 @@ public class cursus_annee {
 
 	}
 
-	public static void youness(int codeIndividu, String datsychr, String dateanne) {
+	public static void syncIndividu(int codeIndividu, String datsychr, String dateanne) {
 		
 		if(cursus_annee.loadInFileIndividusCount == 0){ // nouveau lot d'un load infile
 			System.out.println("Cursus annee Nouveau lot ");
@@ -210,7 +210,7 @@ public class cursus_annee {
 				+ "and cod_ses_elp ='1' "
 				+ "and cod_elp_res=LIS_ELP_COD_ELP "
 				+ "ORDER BY  LIS_ELP_COD_ELP ASC";
-		//System.out.println("youness::selectSQL : " + selectSQL);
+		System.out.println("youness::selectSQL : " + selectSQL);
 		try {
 			
 			dbConnection = getDBConnection();
@@ -262,7 +262,7 @@ public class cursus_annee {
 				
 			}
 			
-			if(cursus_annee.loadInFileIndividusCount == Config.LOAD_IN_FILE_LOT_QTY || codeIndividu == Integer.valueOf(individu.listCodesIndividus.get(individu.listCodesIndividus.size() - 1)) ){
+			if(cursus_annee.loadInFileIndividusCount == Config.LOAD_IN_FILE_BATCH_QTY || codeIndividu == Integer.valueOf(individu.listCodesIndividus.get(individu.listCodesIndividus.size() - 1)) ){
 				
 				try {
 					writer.close();

@@ -326,7 +326,7 @@ public class individu {
 			Pindividu.executeUpdate();
 			System.out.println("Fin Insertion Individu");
 
-			fosuser fosuser = new fosuser();
+			/*fosuser fosuser = new fosuser();
 			try {
 				fosuser.Tablefosuser(dateanne, datsychr);
 			} catch (SQLException e1) {
@@ -363,20 +363,27 @@ public class individu {
 				examen.Tableexam(dateanne, datsychr);
 			} catch (SQLException e) {
 				e.printStackTrace();
-			}
+			}*/
 
-			cursus_annee cursusannee = new cursus_annee();
+			/*cursus_annee cursusannee = new cursus_annee();
 			try {
 				System.out.println("BEGIN :  Sycn Cursus Annee");
 				cursusannee.TableCursus(dateanne, datsychr);
 				System.out.println("END :  Sycn Cursus Annee");
 			} catch (SQLException e) {
 				e.printStackTrace();
-			}
+			}*/
 
-			cursus cursus = new cursus();
+			/*cursus cursus = new cursus();
 			try {
 				cursus.TableCursus(dateanne, datsychr);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}*/
+			
+			Cursus_v2 cursus_v2 = new Cursus_v2();
+			try {
+				Cursus_v2.TableCursus(dateanne, datsychr);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

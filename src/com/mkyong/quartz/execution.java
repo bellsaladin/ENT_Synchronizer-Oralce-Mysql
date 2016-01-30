@@ -75,18 +75,18 @@ public class execution implements Job
 		}
 		
 		
-		System.out.println("L'opération en cours de traitement !!!!");
+		System.out.println("L'opï¿½ration en cours de traitement !!!!");
 		synchronisation synch = new synchronisation();
 		try {
 			synch.OperationsynchronisationMysql(dateanne);
-			//JOptionPane.showMessageDialog(null, "Synchronsation est effectuée avec succès");
+			//JOptionPane.showMessageDialog(null, "Synchronsation est effectuï¿½e avec succï¿½s");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		
-		System.out.println("Opération Update DateSynch");
+		System.out.println("Opï¿½ration Update DateSynch");
 		
 		try {
 			
@@ -97,11 +97,11 @@ public class execution implements Job
 			e.printStackTrace();
 		}		
 		
-		//JOptionPane.showMessageDialog(null, "Update table DateSycnhronsation est effectuée avec succès ");
+		//JOptionPane.showMessageDialog(null, "Update table DateSycnhronsation est effectuï¿½e avec succï¿½s ");
 		
 		// vider table si l date et > a la date de l'atat 0
 		
-		System.out.println("Fin Opération Update DateSynch");
+		System.out.println("Fin Opï¿½ration Update DateSynch");
 		PreparedStatement selle = null;
 		
 		try {	
@@ -131,17 +131,17 @@ public class execution implements Job
 			e.printStackTrace();
 		}
 		
-		System.out.println("Opération vidier les tables");
+		System.out.println("Opï¿½ration vidier les tables");
 		
 		
 		ViderTablesSynchro vidisycnh = new ViderTablesSynchro();
-		vidisycnh.vidiertablesSycnh(DateSynch);
+		//vidisycnh.vidiertablesSycnh(DateSynch);
 		
 		
-		//JOptionPane.showMessageDialog(null, "Delete les lignes inférieure a la date est effectuée avec succès ");
+		//JOptionPane.showMessageDialog(null, "Delete les lignes infï¿½rieure a la date est effectuï¿½e avec succï¿½s ");
 		//----------------------------------------------------
-		System.out.println("Fin Opération vidier les tables");
-		JOptionPane.showMessageDialog(null, "La tâche est effectuée avec succès !!!!!!!!!!!!!!!!!");
+		System.out.println("Fin Opï¿½ration vidier les tables");
+		JOptionPane.showMessageDialog(null, "La tï¿½che est effectuï¿½e avec succï¿½s !!!!!!!!!!!!!!!!!");
 
 	}
 	
