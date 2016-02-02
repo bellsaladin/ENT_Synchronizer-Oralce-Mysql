@@ -107,14 +107,12 @@ public class execution implements Job
 		try {	
 			selle = conn .prepareStatement("SELECT date FROM datesynch where id = (Select max(id) From datesynch)");
 		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		ResultSet rs = null;
 		try {
 			rs = selle.executeQuery();
 		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}	
 		try {
@@ -122,12 +120,10 @@ public class execution implements Job
 				try {
 					DateSynch = rs.getString("date");
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

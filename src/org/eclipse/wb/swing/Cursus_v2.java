@@ -201,8 +201,9 @@ public class Cursus_v2 {
 				+ "AND IAA.ETA_IAA = 'E' "
 				+ "AND IND.COD_IND = "
 				+ codeIndividu
-				+ "AND (ICE.COD_ELP NOT LIKE 'CP%') "
 				// + "AND IND.COD_IND = '87810' "
+				// + "AND (ELP.COD_NEL LIKE '%SM0%' OR ELP.COD_NEL LIKE '%MOD%') "
+				+ "AND (ICE.COD_ELP NOT LIKE 'CP%') "
 				+ "GROUP BY ICE.COD_ANU, "
 				+ "NEL.COD_NEL , "
 				+ "NEL.LIC_NEL , "
@@ -217,7 +218,7 @@ public class Cursus_v2 {
 				+ "from resultat_elp "
 				+ "where TEM_NOT_RPT_ELP='N' "
 				+ "and cod_adm = 1 "
-				+ "and (not_elp is not null  OR (not_elp is null AND cod_tre = 'ABI' ) ) "
+				//+ "and (not_elp is not null  OR (not_elp is null AND cod_tre = 'ABI' ) ) "
 				+ "and cod_ind= "
 				+ codeIndividu
 				// + "and cod_ind= '87810' "
@@ -251,8 +252,8 @@ public class Cursus_v2 {
 				LIS_ELP_COD_ELP = rs.getString("LIS_ELP_COD_ELP");
 				LIS_ELP_COD_LSE = rs.getString("LIS_ELP_COD_LSE");
 				LIS_ELP_COD_ETP = rs.getString("LIS_ELP_COD_ETP");
-				LIS_ELP_LIB_ELP = rs.getString("LIS_ELP_LIB_ELP").replaceAll(
-						"[\r\n]+", "");
+				LIS_ELP_LIB_ELP = (rs.getString("LIS_ELP_LIB_ELP") != null)?rs.getString("LIS_ELP_LIB_ELP").replace(";", "").replaceAll(
+						"[\r\n]+", " "):"";
 				LIS_COD_IND = rs.getString("LIS_COD_IND");
 				not_elp = rs.getString("not_elp");
 				cod_tre_elp = rs.getString("cod_tre_elp");
