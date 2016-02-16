@@ -1,8 +1,6 @@
-package org.eclipse.wb.swing;
+package uit.ent.synchronizer.table;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -10,7 +8,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.SwingConstants;
-import java.awt.Component;
 import java.awt.Color;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -21,14 +18,12 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
 import javax.swing.JButton;
-
-import com.mkyong.quartz.CronTriggersynchonisation;
-
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
+
+import uit.ent.synchronizer.quartz.CronTriggerSynchonisation;
 
 public class Interface_ENT extends JFrame {
 
@@ -147,7 +142,7 @@ public class Interface_ENT extends JFrame {
 								"Opération en cours de traitement... Merci de patienter. ");
 
 				// synchronisation a 12h
-				CronTriggersynchonisation operation = new CronTriggersynchonisation();
+				CronTriggerSynchonisation operation = new CronTriggerSynchonisation();
 				try {
 
 					periode1 = textField_1.getText();
@@ -162,7 +157,7 @@ public class Interface_ENT extends JFrame {
 				}
 
 				// synchronisation a 19h
-				CronTriggersynchonisation operation2 = new CronTriggersynchonisation();
+				CronTriggerSynchonisation operation2 = new CronTriggerSynchonisation();
 				try {
 					periode2 = textField.getText();
 					min2 = textField_3.getText();

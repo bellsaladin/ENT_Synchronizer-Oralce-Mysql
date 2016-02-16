@@ -1,4 +1,4 @@
-package org.eclipse.wb.swing;
+package uit.ent.synchronizer.table;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -18,10 +18,11 @@ import java.util.Date;
 import java.util.Locale;
 
 import uit.ent.synchronizer.Config;
+import uit.ent.synchronizer.Statics;
 
-public class cursus_annee {
-	
-	private static int loadInFileIndividusCount= 0;
+public class Cursus {
+
+	private static int loadInFileIndividusCount = 0;
 	
 	private static String DB_DRIVER;
 	private static String DB_CONNECTION;
@@ -66,9 +67,8 @@ public class cursus_annee {
 	public static void TableCursus(String dateanne, String datsychr)
 			throws SQLException {
 
-		entconnexion entcon = new entconnexion();
-		_Statics cc = new _Statics();
-		entcon.entconnexion();
+		EntConnexion entcon = new EntConnexion();
+		Statics cc = new Statics();
 
 		DB_DRIVER = entcon.getDB_DRIVER();
 		DB_CONNECTION = entcon.getDB_CONNECTION();
@@ -83,12 +83,12 @@ public class cursus_annee {
 		txtDate = new SimpleDateFormat("yyyy-MM-dd hh:m:ss", Locale.FRANCE)
 				.format(new Date());
 		
-		for(int codeIndividu: individu.listCodesIndividus){
-			
-			
-			syncIndividu(codeIndividu, datsychr, dateanne);
-			System.out.println("Cursus annee :"+ n);
+		
+		for(int codeIndividu: Individu.listCodesIndividus){
+			syncIndividu(codeIndividu, datsychr);
+			//System.out.println("Cursus:Individu: "  +n);
 			n++;
+
 		}
 
 	}
@@ -123,24 +123,22 @@ public class cursus_annee {
 
 	}
 
-	public static void syncIndividu(int codeIndividu, String datsychr, String dateanne) {
+	public static void syncIndividu(int codeIndividu, String datsychr) {
 		
-		if(cursus_annee.loadInFileIndividusCount == 0){ // nouveau lot d'un load infile
-			System.out.println("Cursus annee Nouveau lot ");
+		if(Cursus.loadInFileIndividusCount == 0){ // nouveau lot d'un load infile
+			System.out.println("Cursus Nouveau lot ");
 			try {
-				writer = new FileWriter(_Statics.workingDir.replace("\\", "/")
-						+ "/ficher/cursusannee.txt", false);
+				writer = new FileWriter(Statics.workingDir.replace("\\", "/")
+						+ "/ficher/cursus.txt", false);
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
 		}
 		
-		cursus_annee.loadInFileIndividusCount++;
+		Cursus.loadInFileIndividusCount++;
 		
-		//System.out.println("youness (" +codeIndividu + "," + datsychr + "," + dateanne + ")"); 
-		entconnexion entcon = new entconnexion();
-		_Statics cc = new _Statics();
-		entcon.entconnexion();
+		EntConnexion entcon = new EntConnexion();
+		Statics cc = new Statics();
 
 		DB_DRIVER = entcon.getDB_DRIVER();
 		DB_CONNECTION = entcon.getDB_CONNECTION();
@@ -169,50 +167,51 @@ public class cursus_annee {
 				+ "ICE.COD_ANU LIS_ELP_COD_ANU,	"
 				+ "ICE.COD_ANU+1 LIS_ELP_COD_ANU_PLUS_1, "
 				+ "NEL.LIC_NEL LIS_ELP_LIC_NEL,	"
-				+ "ICE.COD_ELP LIS_ELP_COD_ELP, "
-				+ "ELP.LIB_ELP LIS_ELP_LIB_ELP, "
-				+ "IND.COD_IND LIS_COD_IND "
+				+ "ICE.COD_ELP LIS_ELP_COD_ELP,	"
+				+ "ELP.LIB_ELP LIS_ELP_LIB_ELP,	"
+				+ "IND.COD_IND LIS_COD_IND	"
 				+ "FROM	"
 				+ "INDIVIDU IND, "
 				+ "IND_CONTRAT_ELP ICE,	"
 				+ "ELEMENT_PEDAGOGI ELP, "
-				+ "NATURE_ELP NEL,"
+				+ "NATURE_ELP NEL,	"
 				+ "INS_ADM_ANU IAA	"
-				+ "WHERE 1=1 "
-				+ "AND (ICE.COD_IND(+)  = IND.COD_IND) "
+				+ "WHERE 1=1	"
+				+ "AND (ICE.COD_IND(+)  = IND.COD_IND)	"
 				+ "AND (ICE.TEM_PRC_ICE = 'N') "
-				+ "AND (ELP.COD_ELP(+) = ICE.COD_ELP) "
-				+ "AND (NEL.COD_NEL(+) = ELP.COD_NEL) AND IAA.COD_IND = "
-				+ codeIndividu + " "
+				+ "AND (ELP.COD_ELP(+) = ICE.COD_ELP)	"
+				+ "AND (NEL.COD_NEL(+) = ELP.COD_NEL)	"
+				// + "and ELP.cod_cmp='FLK' "
+				+ "AND IAA.COD_IND = "
+				+ codeIndividu
+				// + "AND IAA.COD_IND = '87810' "
 				+ "AND IAA.ETA_IAA = 'E' "
 				+ "AND IND.COD_IND = "
-				+ codeIndividu + " "
-				+ "AND (ELP.COD_NEL LIKE '%SM0%' OR ELP.COD_NEL LIKE '%MOD%') "
+				+ codeIndividu
 				+ "AND (ICE.COD_ELP NOT LIKE 'CP%') "
+				// + "AND IND.COD_IND = '87810' "
 				+ "group by ICE.COD_ANU, "
-				+ "NEL.LIC_NEL, "
-				+ "ICE.COD_ELP, "
-				+ "ELP.LIB_ELP, "
+				+ "NEL.LIC_NEL , "
+				+ "ICE.COD_ELP , "
+				+ "ELP.LIB_ELP , "
 				+ "IND.COD_IND "
 				+ "ORDER BY ICE.COD_ANU DESC, "
 				+ "ICE.COD_ELP), "
 				+ "(select cod_ind as cod_ind_res,cod_anu as cod_anu_elp,cod_elp as cod_elp_res,not_elp as not_elp,cod_tre as cod_tre_elp,cod_ses as cod_ses_elp "
 				+ "from resultat_elp "
 				+ "where TEM_NOT_RPT_ELP='N' "
-				+ "and cod_adm= 1 "
+				+ "and cod_adm=1 "
+				+ "and (not_elp is not null  OR (not_elp is null AND cod_tre = 'ABI' ) ) "
 				+ "and cod_ind= "
-				+ codeIndividu + " "
+				+ codeIndividu
+				// + "and cod_ind= '87810' "
 				+ "group by cod_ind,cod_elp,not_elp,cod_tre,cod_ses,cod_anu) "
 				+ "where LIS_COD_IND=cod_ind_res "
 				+ "and LIS_ELP_COD_ANU=cod_anu_elp "
-				+ "and LIS_ELP_COD_ANU= "
-				+ dateanne + " "
-				+ "and cod_ses_elp ='1' "
 				+ "and cod_elp_res=LIS_ELP_COD_ELP "
 				+ "ORDER BY  LIS_ELP_COD_ELP ASC";
-		System.out.println("youness::selectSQL : " + selectSQL);
+		System.out.println("Cursus:selectSQL:" + selectSQL);
 		try {
-			
 			dbConnection = getDBConnection();
 			preparedStatement = dbConnection.prepareStatement(selectSQL);
 			try {
@@ -220,20 +219,12 @@ public class cursus_annee {
 				conn = DriverManager.getConnection(DB_URL, USER, PASS);
 				stmt1 = conn.createStatement();
 			} catch (ClassNotFoundException e) {
-				System.out.println("Exception");
-				System.out.println(e.getMessage());
+				e.printStackTrace();
 			}
 			ResultSet rs = preparedStatement.executeQuery();
-			//System.out.println("CursusAnnee::Youness::ResultSet" + preparedStatement.toString());
-			/*try {
-				writer = new FileWriter(_Statics.workingDir.replace("\\", "/")
-						+ "/ficher/cursusannee.txt", true);
-			} catch (IOException e) {
-				System.out.println("Exception");
-				System.out.println(e.getMessage());
-			}*/
-			//System.out.println("CursusAnnee::Youness::ResultSet");
+
 			while (rs.next()) {
+
 				LIS_ELP_COD_ANU = rs.getString("LIS_ELP_COD_ANU");
 				LIS_ELP_COD_ANU_PLUS_1 = rs.getString("LIS_ELP_COD_ANU_PLUS_1");
 				LIS_ELP_LIC_NEL = rs.getString("LIS_ELP_LIC_NEL");
@@ -245,52 +236,49 @@ public class cursus_annee {
 				cod_tre_elp = rs.getString("cod_tre_elp");
 				cod_ses_elp = rs.getString("cod_ses_elp");
 
-				String texte = LIS_ELP_COD_ANU + ";" + LIS_ELP_LIC_NEL + ";"
-						+ LIS_ELP_COD_ELP + ";" + LIS_ELP_LIB_ELP + ";"
-						+ LIS_COD_IND + ";" + datsychr + " \n";
+				String texte = LIS_ELP_COD_ANU + ";" + LIS_ELP_COD_ANU_PLUS_1
+						+ ";" + LIS_ELP_LIC_NEL + ";" + LIS_ELP_COD_ELP + ";"
+						+ LIS_ELP_LIB_ELP + ";" + LIS_COD_IND + ";" + not_elp
+						+ ";" + cod_tre_elp + ";" + cod_ses_elp + ";"
+						+ datsychr + " \n";
 
 				texte = texte.replace("null", "---");
-				//System.out.println(texte);
 				String stre2 = new String(texte.getBytes(Charset
 						.forName("ISO-8859-9")));
 				try {
 					writer.write(stre2, 0, stre2.length());
-					//System.out.println("Write" + stre2);
 				} catch (IOException ex) {
 					ex.printStackTrace();
 				}
-				
+
 			}
-			
-			if(cursus_annee.loadInFileIndividusCount == Config.LOAD_IN_FILE_BATCH_QTY || codeIndividu == Integer.valueOf(individu.listCodesIndividus.get(individu.listCodesIndividus.size() - 1)) ){
+
+			if(Cursus.loadInFileIndividusCount == Config.LOAD_IN_FILE_BATCH_QTY || codeIndividu == Integer.valueOf(Individu.listCodesIndividus.get(Individu.listCodesIndividus.size() - 1)) ){
 				
 				try {
 					writer.close();
 				} catch (IOException e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
-				System.out.println("Cursus annee Insertion lot ");
+	
+				System.out.println("Cursus Insertion lot ");
 				
 				PreparedStatement Pindividu = conn
 						.prepareStatement("LOAD DATA LOCAL INFILE '"
-								+ _Statics.workingDir.replace("\\", "/")
-								+ "/ficher/cursusannee.txt' "
-								+ "INTO TABLE cursusannee "
+								+ Statics.workingDir.replace("\\", "/")
+								+ "/ficher/cursus.txt' "
+								+ "INTO TABLE cursusresultat "
 								+ "FIELDS "
 								+ "TERMINATED BY ';' "
 								+ "ESCAPED BY '\\\\' LINES STARTING BY '' "
 								+ "TERMINATED BY '\\n' "
-								+ " (cod_annee, lib_lse, cod_elp, lib_elp, cod_ind, datesync) ");
+								+ " (cod_annee, cod_annee2, lib_lse, cod_elp, lib_elp, cod_ind, note, resultat, cod_session, datesync) ");
 				Pindividu.executeUpdate();
-				cursus_annee.loadInFileIndividusCount = 0;
-				
+				Cursus.loadInFileIndividusCount = 0;
 			}
-			
-			//System.out.println("Insertion Cursus");
-			
 			//System.out.println("Fin Insertion Cursus");
-
+			
 			conn.close();
 
 		} catch (SQLException e) {

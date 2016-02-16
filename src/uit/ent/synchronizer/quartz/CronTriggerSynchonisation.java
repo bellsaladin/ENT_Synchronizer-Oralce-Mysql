@@ -1,4 +1,4 @@
-package com.mkyong.quartz;
+package uit.ent.synchronizer.quartz;
 
 import org.quartz.CronScheduleBuilder;
 import org.quartz.JobBuilder;
@@ -8,15 +8,15 @@ import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
 
-public class CronTriggersynchonisation {
+public class CronTriggerSynchonisation {
 	// public static void main( String[] args ) throws Exception
 	
 	public static void premieresynchronisation(String p1, String m1, String date) throws Exception {
 		
-		execution e1 = new execution();
+		Execution e1 = new Execution();
 		e1.dateannee(date);
 		
-		JobDetail job = JobBuilder.newJob(execution.class)
+		JobDetail job = JobBuilder.newJob(Execution.class)
 				.withIdentity("dummyJobName", "group1").build();
 		Trigger trigger = TriggerBuilder
 				.newTrigger()
@@ -24,10 +24,10 @@ public class CronTriggersynchonisation {
 				.withSchedule(
 						// a 15:58h entre lundi samedi
 						CronScheduleBuilder.cronSchedule("0 "+ m1 +" "+ p1 +" ? * MON-SAT"))
-				/*« Tous les jours du lundi au vendredi à 08h00 » se traduit
-				par « 0 0 8 ? * MON-FRI » ;
-				« Tous les derniers vendredis du mois à 10h15 » se traduit
-				par « 0 15 10 ? * 6L ».
+				/*ï¿½ Tous les jours du lundi au vendredi ï¿½ 08h00 ï¿½ se traduit
+				par ï¿½ 0 0 8 ? * MON-FRI ï¿½ ;
+				ï¿½ Tous les derniers vendredis du mois ï¿½ 10h15 ï¿½ se traduit
+				par ï¿½ 0 15 10 ? * 6L ï¿½.
 				CronScheduleBuilder.cronSchedule("0 0 18 ? * MON-SUN"))
 				 */
 				.build();
@@ -39,10 +39,10 @@ public class CronTriggersynchonisation {
 
 	public static void deuxiemesynchronisation(String p2, String m2, String date) throws Exception {
 		
-		execution e2 = new execution();
+		Execution e2 = new Execution();
 		e2.dateannee(date);
 		
-		JobDetail job1 = JobBuilder.newJob(execution.class)
+		JobDetail job1 = JobBuilder.newJob(Execution.class)
 				.withIdentity("dummyJobName2", "group1").build();
 		Trigger trigger1 = TriggerBuilder
 				.newTrigger()

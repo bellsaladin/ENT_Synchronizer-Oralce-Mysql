@@ -1,4 +1,4 @@
-package org.eclipse.wb.swing;
+package uit.ent.synchronizer.table;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -17,16 +17,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class etape {
+import uit.ent.synchronizer.Statics;
 
-	private static String query2;
-	private static ResultSet rs2;
-	private static int COD_IND;
-	private static String LIB_ETP;
-	private static int COD_ANU;
-	private static String COD_ETP;
-	private static String LIB_DIP;
-	private static String LIC_DIP;
+public class Bac {
 
 	private static String DB_DRIVER;
 	private static String DB_CONNECTION;
@@ -36,20 +29,26 @@ public class etape {
 	private static String DB_URL;
 	private static String USER;
 	private static String PASS;
-
+	private static String query2;
+	private static ResultSet rs2;
+	private static int COD_IND;
+	private static String DAA_OBT_BAC_IBA;
+	private static String COD_BAC;
+	private static String LIB_BAC;
+	private static String LIB_MNB;
+	private static String LIB_ETB;
+	private static String LIB_DEP;
 	private static int n;
 	private static Connection conn;
-
-	private static String filename = "etape";
+	private static String filename = "Bac";
 	private static FileWriter writer;
 	private static String txtDate;
 
-	public static void TableEtape(String dateanne, String datsychr)
+	public static void TableBac(String dateanne, String datsychr)
 			throws SQLException {
 
-		entconnexion entcon = new entconnexion();
-		_Statics cc = new _Statics();
-		entcon.entconnexion();
+		EntConnexion entcon = new EntConnexion();
+		Statics cc = new Statics();
 
 		DB_DRIVER = entcon.getDB_DRIVER();
 		DB_CONNECTION = entcon.getDB_CONNECTION();
@@ -71,17 +70,25 @@ public class etape {
 		Statement stmt = null;
 		Statement stmt1 = null;
 
-		String selectSQL = "SELECT DISTINCT INDIVIDU.COD_IND,"
-				+ "ETAPE.LIB_ETP," + "INS_ADM_ETP.COD_ANU,"
-				+ "INS_ADM_ETP.COD_ETP," + "DIPLOME.LIB_DIP,"
-				+ "DIPLOME.LIC_DIP " + "FROM ETAPE " + "FULL JOIN INS_ADM_ETP "
-				+ "ON INS_ADM_ETP.COD_ETP = ETAPE.COD_ETP "
-				+ "FULL JOIN INDIVIDU "
+		String selectSQL = "SELECT DISTINCT IND_BAC.COD_BAC,"
+				+ "INDIVIDU.COD_IND," + "BAC_OUX_EQU.LIB_BAC,"
+				+ "MENTION_NIV_BAC.LIB_MNB," + "ETABLISSEMENT.LIB_ETB,"
+				+ "DEPARTEMENT.LIB_DEP," + "IND_BAC.DAA_OBT_BAC_IBA "
+				+ "FROM INDIVIDU " + "FULL JOIN IND_BAC "
+				+ "ON INDIVIDU.COD_IND = IND_BAC.COD_IND "
+				+ "FULL JOIN DEPARTEMENT "
+				+ "ON DEPARTEMENT.COD_DEP = IND_BAC.COD_DEP "
+				+ "FULL JOIN BAC_OUX_EQU "
+				+ "ON BAC_OUX_EQU.COD_BAC = IND_BAC.COD_BAC "
+				+ "FULL JOIN ETABLISSEMENT "
+				+ "ON ETABLISSEMENT.COD_ETB = IND_BAC.COD_ETB "
+				+ "FULL JOIN MENTION_NIV_BAC "
+				+ "ON MENTION_NIV_BAC.COD_MNB = IND_BAC.COD_MNB "
+				+ "FULL JOIN INS_ADM_ETP "
 				+ "ON INS_ADM_ETP.COD_IND = INDIVIDU.COD_IND "
-				+ "FULL JOIN DIPLOME "
-				+ "ON DIPLOME.COD_DIP = INS_ADM_ETP.COD_DIP "
 				+ "WHERE INS_ADM_ETP.COD_ANU = " + dateanne
 				+ " AND INS_ADM_ETP.ETA_IAE = 'E'";
+		// AND INDIVIDU.COD_IND = '38032'
 		try {
 			dbConnection = getDBConnection();
 			preparedStatement = dbConnection.prepareStatement(selectSQL);
@@ -91,7 +98,6 @@ public class etape {
 				conn = DriverManager.getConnection(DB_URL, USER, PASS);
 				stmt1 = conn.createStatement();
 			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -99,29 +105,32 @@ public class etape {
 
 			int i = 0;
 			n = 0;
+
 			try {
-				writer = new FileWriter(_Statics.workingDir.replace("\\", "/")
-						+ "/ficher/etape.txt", false);
+				writer = new FileWriter(Statics.workingDir.replace("\\", "/")
+						+ "/ficher/Bac.txt", false);
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
+
 			while (rs.next()) {
 
+				COD_BAC = rs.getString("COD_BAC");
 				COD_IND = rs.getInt("COD_IND");
-				LIB_ETP = rs.getString("LIB_ETP");
-				COD_ANU = rs.getInt("COD_ANU");
-				COD_ETP = rs.getString("COD_ETP");
-				LIB_DIP = rs.getString("LIB_DIP");
-				LIC_DIP = rs.getString("LIC_DIP");
+				LIB_BAC = rs.getString("LIB_BAC");
+				LIB_MNB = rs.getString("LIB_MNB");
+				LIB_ETB = rs.getString("LIB_ETB");
+				LIB_DEP = rs.getString("LIB_DEP");
+				DAA_OBT_BAC_IBA = rs.getString("DAA_OBT_BAC_IBA");
 
-				String texte = COD_ETP + ";" + COD_IND + ";" + LIB_ETP + ";"
-						+ COD_ANU + ";" + LIB_DIP + ";" + LIC_DIP + ";"
+				String texte = COD_IND + ";" + LIB_BAC + ";" + LIB_MNB + ";"
+						+ LIB_ETB + ";" + LIB_DEP + ";" + DAA_OBT_BAC_IBA + ";"
 						+ datsychr + " \n";
 
 				texte = texte.replace("null", "---");
 				String stre2 = new String(texte.getBytes(Charset
 						.forName("ISO-8859-9")));
+				// System.out.println(stre2);
 
 				try {
 					writer.write(stre2, 0, stre2.length());
@@ -136,23 +145,22 @@ public class etape {
 			try {
 				writer.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
-			System.out.println("Insertion etape");
+			System.out.println("Insertion Bac");
 			PreparedStatement Pindividu = conn
 					.prepareStatement("LOAD DATA LOCAL INFILE '"
-							+ _Statics.workingDir.replace("\\", "/")
-							+ "/ficher/etape.txt' "
-							+ "INTO TABLE etape "
+							+ Statics.workingDir.replace("\\", "/")
+							+ "/ficher/Bac.txt' "
+							+ "INTO TABLE bac "
 							+ "FIELDS "
 							+ "TERMINATED BY ';' "
 							+ "ESCAPED BY '\\\\' LINES STARTING BY '' "
 							+ "TERMINATED BY '\\n' "
-							+ " (cod_etp, cod_ind, lib_etp, cod_annee, lib_dip, lic_dip, datesync) ");
+							+ "(cod_ind, serie, mention, etablissmenet, province, date, datesync) ");
 			Pindividu.executeUpdate();
-			System.out.println("Fin Insertion etape");
+			System.out.println("Fin Insertion Bac");
 
 			conn.close();
 

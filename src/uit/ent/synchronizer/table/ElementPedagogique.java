@@ -1,4 +1,4 @@
-package org.eclipse.wb.swing;
+package uit.ent.synchronizer.table;
 
 
 import java.io.FileWriter;
@@ -14,8 +14,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import uit.ent.synchronizer.Statics;
 
-public class element_pedagogique  {
+
+public class ElementPedagogique  {
 
 	private static String DB_DRIVER;
 	private static String DB_CONNECTION;
@@ -105,10 +107,7 @@ public class element_pedagogique  {
 
 	public static void Tableelementpedagogique(String dateanne, String datsychr) throws SQLException {
 			
-		entconnexion entcon = new entconnexion();
-		_Statics cc= new _Statics();
-		entcon.entconnexion();
-
+		EntConnexion entcon = new EntConnexion();
 		DB_DRIVER = entcon.getDB_DRIVER();
 		DB_CONNECTION = entcon.getDB_CONNECTION();
 		DB_USER = entcon.getDB_USER();
@@ -162,7 +161,7 @@ public class element_pedagogique  {
 			
 			try {
 				//writer = new FileWriter(cc.workingDir+"\\ficher\\"+ filename +".txt", false);
-				writer = new FileWriter( _Statics.workingDir.replace("\\", "/")+"/ficher/element_pedagogique.txt", false);
+				writer = new FileWriter( Statics.workingDir.replace("\\", "/")+"/ficher/element_pedagogique.txt", false);
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -336,7 +335,7 @@ public class element_pedagogique  {
 		
 		System.out.println("Insertion element_pedagogique");		
 	
-		PreparedStatement Pindividu = conn .prepareStatement("LOAD DATA LOCAL INFILE '" + _Statics.workingDir.replace("\\", "/")+ "/ficher/element_pedagogique.txt' " +
+		PreparedStatement Pindividu = conn .prepareStatement("LOAD DATA LOCAL INFILE '" + Statics.workingDir.replace("\\", "/")+ "/ficher/element_pedagogique.txt' " +
 					"INTO TABLE element_pedagogique " +
 					"FIELDS " +
 					"TERMINATED BY ';' " +

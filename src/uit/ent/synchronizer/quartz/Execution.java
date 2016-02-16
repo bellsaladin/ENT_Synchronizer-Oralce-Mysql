@@ -1,4 +1,4 @@
-package com.mkyong.quartz;
+package uit.ent.synchronizer.quartz;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,16 +9,17 @@ import java.sql.Statement;
 
 import javax.swing.JOptionPane;
 
-import org.eclipse.wb.swing.ViderTablesSynchro;
-import org.eclipse.wb.swing.Vidertables;
-import org.eclipse.wb.swing.entconnexion;
-import org.eclipse.wb.swing.individu;
-import org.eclipse.wb.swing.synchronisation;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
-public class execution implements Job
+import uit.ent.synchronizer.table.EntConnexion;
+import uit.ent.synchronizer.table.Individu;
+import uit.ent.synchronizer.table.Synchronisation;
+import uit.ent.synchronizer.table.ViderTablesSynchro;
+import uit.ent.synchronizer.table.Vidertables;
+
+public class Execution implements Job
 {
 	public static String dateanne;
 	private static String txtDate;
@@ -29,18 +30,14 @@ public class execution implements Job
 	private String DateSynch;
 	
 	public void dateannee (String date){
-		
 		dateanne = date;
-		
 	}
 	
 	@SuppressWarnings("null")
 	public void execute(JobExecutionContext context)
 	throws JobExecutionException {
 		
-		entconnexion entcon = new entconnexion();
-		entcon.entconnexion();
-		
+		EntConnexion entcon = new EntConnexion();
 			
 		//------------ vider les tables Mysql ----------
 		JDBC_DRIVER = entcon.getJDBC_DRIVER();
@@ -52,8 +49,6 @@ public class execution implements Job
 		PreparedStatement ps = null;
 		Connection conn = null;
 		Statement stmt1 = null;
-		
-		
 		
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -74,19 +69,16 @@ public class execution implements Job
 			e.printStackTrace();
 		}
 		
-		
-		System.out.println("L'op�ration en cours de traitement !!!!");
-		synchronisation synch = new synchronisation();
+		System.out.println("L'opération en cours de traitement !!!!");
+		Synchronisation synch = new Synchronisation();
 		try {
-			synch.OperationsynchronisationMysql(dateanne);
-			//JOptionPane.showMessageDialog(null, "Synchronsation est effectu�e avec succ�s");
+			synch.operationSynchronisationMysql(dateanne);
+			//JOptionPane.showMessageDialog(null, "Synchronsation est effectuée avec succés");
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		
-		System.out.println("Op�ration Update DateSynch");
+		System.out.println("Opération Update DateSynch");
 		
 		try {
 			
@@ -101,7 +93,7 @@ public class execution implements Job
 		
 		// vider table si l date et > a la date de l'atat 0
 		
-		System.out.println("Fin Op�ration Update DateSynch");
+		System.out.println("Fin de l'opération Update DateSynch");
 		PreparedStatement selle = null;
 		
 		try {	
@@ -125,10 +117,7 @@ public class execution implements Job
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}
-		
-		System.out.println("Op�ration vidier les tables");
-		
+		}		
 		
 		ViderTablesSynchro vidisycnh = new ViderTablesSynchro();
 		//vidisycnh.vidiertablesSycnh(DateSynch);
@@ -136,8 +125,7 @@ public class execution implements Job
 		
 		//JOptionPane.showMessageDialog(null, "Delete les lignes inf�rieure a la date est effectu�e avec succ�s ");
 		//----------------------------------------------------
-		System.out.println("Fin Op�ration vidier les tables");
-		JOptionPane.showMessageDialog(null, "La t�che est effectu�e avec succ�s !!!!!!!!!!!!!!!!!");
+		JOptionPane.showMessageDialog(null, "La tâche a été effectuée avec succés !");
 
 	}
 	

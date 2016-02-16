@@ -1,4 +1,4 @@
-package org.eclipse.wb.swing;
+package uit.ent.synchronizer.table;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -22,8 +22,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import uit.ent.synchronizer.Statics;
 
-public class fosuser {
+
+public class FosUser {
 
 	private static ResultSet rs1;
 	private static int COD_IND;
@@ -113,9 +115,7 @@ public class fosuser {
 	public static void Tablefosuser(String dateanne, String datsychr)
 			throws SQLException {
 
-		entconnexion entcon = new entconnexion();
-		_Statics cc = new _Statics();
-		entcon.entconnexion();
+		EntConnexion entcon = new EntConnexion();
 
 		DB_DRIVER = entcon.getDB_DRIVER();
 		DB_CONNECTION = entcon.getDB_CONNECTION();
@@ -167,7 +167,7 @@ public class fosuser {
 			n = 1;
 
 			try {
-				writer = new FileWriter(_Statics.workingDir.replace("\\", "/")
+				writer = new FileWriter(Statics.workingDir.replace("\\", "/")
 						+ "/ficher/fos_user.txt", false);
 			} catch (IOException e1) {
 				e1.printStackTrace();
@@ -204,7 +204,7 @@ public class fosuser {
 
 			PreparedStatement Pindividu = conn
 					.prepareStatement("LOAD DATA LOCAL INFILE '"
-							+ _Statics.workingDir.replace("\\", "/")
+							+ Statics.workingDir.replace("\\", "/")
 							+ "/ficher/fos_user.txt' "
 							+ "INTO TABLE fos_user "
 							+ "FIELDS "

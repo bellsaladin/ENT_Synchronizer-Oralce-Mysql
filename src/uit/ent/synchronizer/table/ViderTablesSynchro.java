@@ -1,4 +1,4 @@
-package org.eclipse.wb.swing;
+package uit.ent.synchronizer.table;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,11 +9,10 @@ public class ViderTablesSynchro {
 	public void vidiertablesSycnh(String Date) {
 		try {
 
-			entconnexion entcon = new entconnexion();
-			entcon.entconnexion();
+			EntConnexion entcon = new EntConnexion();
 
 			System.out
-					.println("début opération pour vider toutes les tables aprés synchronisation");
+					.println("dÃ©but opÃ©ration pour vider toutes les tables aprï¿½s synchronisation");
 			String myDriver = "org.gjt.mm.mysql.Driver";
 			String myUrl = entcon.getDB_URL();
 			Class.forName(myDriver);
@@ -66,7 +65,7 @@ public class ViderTablesSynchro {
 			conn.close();
 
 			System.out
-					.println("Fin d'opération vider tables aprés synchronisation ");
+					.println("Fin d'opï¿½ration vider tables aprï¿½s synchronisation ");
 		} catch (Exception e) {
 			System.err.println("Got an exception!");
 			System.err.println(e.getMessage());

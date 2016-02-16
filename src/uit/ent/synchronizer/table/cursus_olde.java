@@ -1,4 +1,4 @@
-package org.eclipse.wb.swing;
+package uit.ent.synchronizer.table;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,6 +16,8 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import uit.ent.synchronizer.Statics;
 
 public class cursus_olde {
 
@@ -51,9 +53,8 @@ public class cursus_olde {
 	public static void TableCursus(String dateanne, String datsychr)
 			throws SQLException {
 
-		entconnexion entcon = new entconnexion();
-		_Statics cc= new _Statics();
-		entcon.entconnexion();
+		EntConnexion entcon = new EntConnexion();
+		Statics cc= new Statics();
 		
 		DB_DRIVER = entcon.getDB_DRIVER();
 		DB_CONNECTION = entcon.getDB_CONNECTION();
@@ -114,7 +115,7 @@ public class cursus_olde {
 			n = 0;
 			try {
 				//writer = new FileWriter(cc.workingDir+"\\ficher\\"+ filename +".txt", false);
-				writer = new FileWriter( _Statics.workingDir.replace("\\", "/")+"/ficher/cursus.txt", false);
+				writer = new FileWriter( Statics.workingDir.replace("\\", "/")+"/ficher/cursus.txt", false);
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -176,7 +177,7 @@ public class cursus_olde {
 			 
 			System.out.println("Insertion Cursus");		
 			 //PreparedStatement Pindividu = conn .prepareStatement("LOAD DATA LOCAL INFILE 'ficher/cursus.txt' " +
-			 PreparedStatement Pindividu = conn .prepareStatement("LOAD DATA LOCAL INFILE '" + _Statics.workingDir.replace("\\", "/")+ "/ficher/cursus.txt' " +
+			 PreparedStatement Pindividu = conn .prepareStatement("LOAD DATA LOCAL INFILE '" + Statics.workingDir.replace("\\", "/")+ "/ficher/cursus.txt' " +
 					"INTO TABLE cursusresultat " +
 					"FIELDS " +
 					"TERMINATED BY ';' " +

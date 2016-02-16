@@ -1,4 +1,4 @@
-package org.eclipse.wb.swing;
+package uit.ent.synchronizer.table;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -12,10 +12,9 @@ public class Vidertables {
 	    try
 	    {
 	    	
-	    entconnexion entcon = new entconnexion();
-	    entcon.entconnexion();
+	    EntConnexion entcon = new EntConnexion();
 	    
-	      System.out.println("début opération pour vider  toutes les tables ");
+	      System.out.println("Vidage des tables ");
 	      // create a mysql database connection
 	      String myDriver = "org.gjt.mm.mysql.Driver";
 	      String myUrl = entcon.getDB_URL();
@@ -54,7 +53,7 @@ public class Vidertables {
 	    	       
 	      conn.close();
 	      
-	      System.out.println("Fin d'opération vider tables ");
+	      System.out.println("Fin d'opï¿½ration vider tables ");
 	    }
 	    catch (Exception e)
 	    {

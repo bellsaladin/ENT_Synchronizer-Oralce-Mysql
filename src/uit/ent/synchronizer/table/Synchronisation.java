@@ -1,4 +1,4 @@
-package org.eclipse.wb.swing;
+package uit.ent.synchronizer.table;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -13,7 +13,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class synchronisation {
+import uit.ent.synchronizer.Statics;
+
+public class Synchronisation {
 	private static String txtDate;
 	private static PreparedStatement datesynch;
 	private static String JDBC_DRIVER;
@@ -24,11 +26,10 @@ public class synchronisation {
 	private Date date;
 	private FileWriter writer;
 
-	public void OperationsynchronisationMysql(String dateanne)
+	public void operationSynchronisationMysql(String dateanne)
 			throws SQLException {
 
-		entconnexion entcon = new entconnexion();
-		entcon.entconnexion();
+		EntConnexion entcon = new EntConnexion();
 
 		// ------------ vider les tables Mysql ----------
 		JDBC_DRIVER = entcon.getJDBC_DRIVER();
@@ -64,7 +65,7 @@ public class synchronisation {
 				.format(new Date());
 		System.out.println("Date de synchronisation" + txtDate);
 		try {
-			writer = new FileWriter(_Statics.workingDir.replace("\\", "/")
+			writer = new FileWriter(Statics.workingDir.replace("\\", "/")
 					+ "/ficher/datesynch.txt", false);
 		} catch (IOException e1) {
 			e1.printStackTrace();
@@ -88,7 +89,7 @@ public class synchronisation {
 		
 		PreparedStatement Pindividu = conn
 				.prepareStatement("LOAD DATA LOCAL INFILE '"
-						+ _Statics.workingDir.replace("\\", "/")
+						+ Statics.workingDir.replace("\\", "/")
 						+ "/ficher/datesynch.txt' " + "INTO TABLE datesynch "
 						+ "FIELDS " + "TERMINATED BY ';' "
 						+ "ESCAPED BY '\\\\' LINES STARTING BY '' "
@@ -99,7 +100,7 @@ public class synchronisation {
 
 		System.out.println("BEGIN :  Sycn anneeUni");
 		
-		annee_uni anneeuni = new annee_uni();
+		AnneeUni anneeuni = new AnneeUni();
 		try {
 			anneeuni.TableAnueeuni(txtDate);
 		} catch (SQLException e) {
@@ -110,9 +111,9 @@ public class synchronisation {
 		
 		System.out.println("BEGIN : Sync Individu");
 		
-		individu individu = new individu();
+		Individu individu = new Individu();
 		try {
-			individu.Tableindividu(dateanne, txtDate);
+			individu.tableIndividu(dateanne, txtDate);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

@@ -1,4 +1,4 @@
-package org.eclipse.wb.swing;
+package uit.ent.synchronizer.table;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -18,7 +18,9 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
-public class examen {
+import uit.ent.synchronizer.Statics;
+
+public class Examen {
 
 	private static String COD_IND;
 	private static String COD_ETU;
@@ -49,13 +51,13 @@ public class examen {
 	private static String txtDate;
 	private static String datefin;
 	private static String datedebi;
+	private static String COD_SES;
+	private static String COD_ETP;
 
 	public static void Tableexam(String dateanne, String datsychr)
 			throws SQLException {
 
-		entconnexion entcon = new entconnexion();
-		_Statics cc = new _Statics();
-		entcon.entconnexion();
+		EntConnexion entcon = new EntConnexion();
 
 		DB_DRIVER = entcon.getDB_DRIVER();
 		DB_CONNECTION = entcon.getDB_CONNECTION();
@@ -75,15 +77,17 @@ public class examen {
 		gc.add(GregorianCalendar.DATE, +30);
 		uneDate = gc.getTime();
 
-		datefin = new SimpleDateFormat("dd/MM/yy").format(uneDate);
+		datefin = new SimpleDateFormat("YYYY-MM-DD").format(uneDate);
 
 		GregorianCalendar gc1 = new GregorianCalendar();
 		gc1.setTime(uneDate1);
-		gc1.add(GregorianCalendar.DATE, -30);
+		gc1.add(GregorianCalendar.DATE, -3);
 		uneDate1 = gc1.getTime();
 
-		datedebi = new SimpleDateFormat("dd/MM/yy").format(uneDate1);
+		datedebi = new SimpleDateFormat("yyyy-MM-dd").format(uneDate1);
 
+		System.out.println("---------- "+datedebi);
+		
 		txtDate = new SimpleDateFormat("yyyy-MM-dd hh:m:ss", Locale.FRANCE)
 				.format(new Date());
 
@@ -101,8 +105,8 @@ public class examen {
 				+ "PRD_EPR_SAL_ANU.DUR_EXA_EPR_PES," + "EPREUVE.LIB_EPR,"
 				+ "PES_IND.COD_PES," + "PES_IND.COD_IND," + "PES_IND.COD_ETU,"
 				+ "PES_IND.LIB_NOM_PAT_IND," + "ELEMENT_PEDAGOGI.COD_NEL,"
-				+ "SALLE.LIB_SAL," + "PRD_EPR_SAL_ANU.COD_EPR,"
-				+ "PES_IND.LIB_PR1_IND " + "FROM " + "PRD_EPR_SAL_ANU "
+				+ "PRD_EPR_SAL_ANU.COD_SAL," + "PRD_EPR_SAL_ANU.COD_EPR,"
+				+ "PES_IND.LIB_PR1_IND , APOGEE.EPR_SANCTIONNE_ELP.COD_SES, APOGEE.IND_CONTRAT_ELP.COD_ETP " + "FROM " + "PRD_EPR_SAL_ANU "
 				+ "INNER JOIN PES_IND " + "ON "
 				+ "PRD_EPR_SAL_ANU.COD_PES = PES_IND.COD_PES "
 				+ "INNER JOIN APOGEE.EPREUVE " + "ON "
@@ -112,11 +116,19 @@ public class examen {
 				+ "INNER JOIN ELEMENT_PEDAGOGI " + "ON "
 				+ "ELEMENT_PEDAGOGI.COD_ELP = EPR_SANCTIONNE_ELP.COD_ELP "
 				+ "INNER JOIN APOGEE.SALLE " + "ON "
-				+ "SALLE.COD_SAL = PRD_EPR_SAL_ANU.COD_SAL " + "WHERE "
+				+ "SALLE.COD_SAL = PRD_EPR_SAL_ANU.COD_SAL "
+				+ "INNER JOIN APOGEE.IND_CONTRAT_ELP "
+				+ "ON APOGEE.IND_CONTRAT_ELP.COD_ELP = ELEMENT_PEDAGOGI.COD_ELP "
+				+ "AND APOGEE.IND_CONTRAT_ELP.COD_IND = PES_IND.COD_IND " + "WHERE "
 				+ "PRD_EPR_SAL_ANU.COD_ANU = " + dateanne
-				+ " AND PRD_EPR_SAL_ANU.DAT_DEB_PES > '" + datedebi
-				+ "' AND PRD_EPR_SAL_ANU.DAT_DEB_PES < '" + datefin + "'";
+				+ " AND APOGEE.EPR_SANCTIONNE_ELP.COD_SES = 2 "
+				+ " AND PRD_EPR_SAL_ANU.DAT_DEB_PES > to_date('" + datedebi + "', 'yyyy-mm-dd')"
+				+ " and PRD_EPR_SAL_ANU.DAT_DEB_PES IS NOT NULL";
 
+		System.out.println(selectSQL);
+		
+		//AND PRD_EPR_SAL_ANU.DAT_DEB_PES < '" + datefin + "'
+		
 		try {
 			dbConnection = getDBConnection();
 			preparedStatement = dbConnection.prepareStatement(selectSQL);
@@ -133,7 +145,7 @@ public class examen {
 			int i = 0;
 			n = 0;
 			try {
-				writer = new FileWriter(_Statics.workingDir.replace("\\", "/")
+				writer = new FileWriter(Statics.workingDir.replace("\\", "/")
 						+ "/ficher/examen.txt", false);
 			} catch (IOException e1) {
 				e1.printStackTrace();
@@ -146,18 +158,21 @@ public class examen {
 				DHH_DEB_PES = rs.getString("DHH_DEB_PES");
 				DMM_DEB_PES = rs.getString("DMM_DEB_PES");
 				DUR_EXA_EPR_PES = rs.getString("DUR_EXA_EPR_PES");
-				LIB_EPR = rs.getString("LIB_EPR");
+				LIB_EPR = (rs.getString("LIB_EPR") != null)?rs.getString("LIB_EPR").replaceAll("(\\r|\\n|\\r\\n)+", " "):"";
 				COD_NEL = rs.getString("COD_NEL");
-				LIB_SAL = rs.getString("LIB_SAL");
+				LIB_SAL = rs.getString("COD_SAL");
 				COD_EPR = rs.getString("COD_EPR");
+				COD_SES = rs.getString("COD_SES");
 				heure = String.format("%02d", Integer.valueOf(DHH_DEB_PES))
 						+ ":"
 						+ String.format("%02d", Integer.valueOf(DMM_DEB_PES));
 
+				COD_ETP =  rs.getString("COD_ETP");
+				
 				String texte = COD_IND + ";" + COD_ETU + ";" + COD_ANU + ";"
 						+ DAT_DEB_PES + ";" + heure + ";" + DUR_EXA_EPR_PES
 						+ ";" + LIB_EPR + ";" + COD_NEL + ";" + LIB_SAL + ";"
-						+ COD_EPR + ";" + datsychr + " \n";
+						+ COD_EPR + ";" + COD_SES + ";" + COD_ETP + ";" + datsychr + " \n";
 
 				texte = texte.replace("null", "---");
 				String stre2 = new String(texte.getBytes(Charset
@@ -183,14 +198,14 @@ public class examen {
 			System.out.println("Insertion examen");
 			PreparedStatement Pindividu = conn
 					.prepareStatement("LOAD DATA LOCAL INFILE '"
-							+ _Statics.workingDir.replace("\\", "/")
+							+ Statics.workingDir.replace("\\", "/")
 							+ "/ficher/examen.txt' "
 							+ "INTO TABLE examen "
 							+ "FIELDS "
 							+ "TERMINATED BY ';' "
 							+ "ESCAPED BY '\\\\' LINES STARTING BY '' "
 							+ "TERMINATED BY '\\n' "
-							+ " (cod_ind, cod_etudiant, cod_annee, date_deb, dhh_deb, dur_exa_epr, lib_epr, cod_nel, salle, cod_eprv, datesync) ");
+							+ " (cod_ind, cod_etudiant, cod_annee, date_deb, dhh_deb, dur_exa_epr, lib_epr, cod_nel, salle, cod_eprv, cod_ses, cod_etp, datesync) ");
 			Pindividu.executeUpdate();
 			System.out.println("Fin Insertion examen");
 

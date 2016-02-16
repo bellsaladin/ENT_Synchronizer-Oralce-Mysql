@@ -1,4 +1,4 @@
-package org.eclipse.wb.swing;
+package uit.ent.synchronizer.table;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,6 +16,8 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import uit.ent.synchronizer.Statics;
 
 public class lse_regroupe_elp {
 
@@ -71,9 +73,7 @@ public class lse_regroupe_elp {
 	public static void TablelseregroupeelpBac(String dateanne, String datsychr)
 			throws SQLException {
 
-		entconnexion entcon = new entconnexion();
-		_Statics cc = new _Statics();
-		entcon.entconnexion();
+		EntConnexion entcon = new EntConnexion();
 
 		DB_DRIVER = entcon.getDB_DRIVER();
 		DB_CONNECTION = entcon.getDB_CONNECTION();
@@ -122,7 +122,7 @@ public class lse_regroupe_elp {
 			try {
 				// writer = new FileWriter(cc.workingDir+"\\ficher\\"+ filename
 				// +".txt", false);
-				writer = new FileWriter(_Statics.workingDir.replace("\\", "/")
+				writer = new FileWriter(Statics.workingDir.replace("\\", "/")
 						+ "/ficher/lse_regroupe_elp.txt", false);
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
@@ -226,7 +226,7 @@ public class lse_regroupe_elp {
 			System.out.println("Insertion lse_regroupe_elp");
 			PreparedStatement Pindividu = conn
 					.prepareStatement("LOAD DATA LOCAL INFILE '"
-							+ _Statics.workingDir.replace("\\", "/")
+							+ Statics.workingDir.replace("\\", "/")
 							+ "/ficher/lse_regroupe_elp.txt' "
 							+ "INTO TABLE lse_regroupe_elp "
 							+ "FIELDS "

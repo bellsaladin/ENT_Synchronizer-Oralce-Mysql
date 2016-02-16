@@ -1,4 +1,4 @@
-package org.eclipse.wb.swing;
+package uit.ent.synchronizer.table;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -17,7 +17,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class diplom {
+import uit.ent.synchronizer.Statics;
+
+public class Diplome {
 
 	private static String DB_DRIVER;
 	private static String DB_CONNECTION;
@@ -48,10 +50,7 @@ public class diplom {
 	public static void Tabledip(String dateanne, String datsychr)
 			throws SQLException {
 
-		entconnexion entcon = new entconnexion();
-		_Statics cc = new _Statics();
-		entcon.entconnexion();
-
+		EntConnexion entcon = new EntConnexion();
 		DB_DRIVER = entcon.getDB_DRIVER();
 		DB_CONNECTION = entcon.getDB_CONNECTION();
 		DB_USER = entcon.getDB_USER();
@@ -107,7 +106,7 @@ public class diplom {
 			int i = 0;
 			n = 0;
 			try {
-				writer = new FileWriter(_Statics.workingDir.replace("\\", "/")
+				writer = new FileWriter(Statics.workingDir.replace("\\", "/")
 						+ "/ficher/diplom.txt", false);
 			} catch (IOException e1) {
 				e1.printStackTrace();
@@ -154,7 +153,7 @@ public class diplom {
 			System.out.println("Insertion Diplom");
 			PreparedStatement Pindividu = conn
 					.prepareStatement("LOAD DATA LOCAL INFILE '"
-							+ _Statics.workingDir.replace("\\", "/")
+							+ Statics.workingDir.replace("\\", "/")
 							+ "/ficher/diplom.txt' "
 							+ "INTO TABLE diplome "
 							+ "FIELDS "
