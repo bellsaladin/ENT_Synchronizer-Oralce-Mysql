@@ -43,7 +43,6 @@ public class Individu extends Synchronizable{
 	private static String telefix2;
 	private static String LIB_NOM_IND_ARB;
 	private static String LIB_PRN_IND_ARB;
-	private static String LIB_VIL_NAI_ETU_ARB;
 	private static int    COD_ANU_INA;
 	private static String nationaissan;
 	private static String provadressfix;
@@ -51,7 +50,6 @@ public class Individu extends Synchronizable{
 	private static String provadressfix2;
 	private static String comunadressfix2;
 	private static String departementnaissance;
-	private static String paysNaissance;
 	private static String cod_apogee;
 	private static String lib_etablissement;
 	private static String lic_etablissement;
@@ -65,7 +63,7 @@ public class Individu extends Synchronizable{
 	private static String lib_ad3_cmp;
 	private static FileWriter writer;
 
-	public void tableIndividu(String dateanne, String datsychr)
+	public void synchronize(String dateanne, String datsychr)
 			throws SQLException {
 
 		PreparedStatement preparedStatement = null;
@@ -181,7 +179,6 @@ public class Individu extends Synchronizable{
 				telefix2 =(rs.getString("telefix2") != null)?rs.getString("telefix2").replace(";", ""):"";
 				LIB_NOM_IND_ARB =(rs.getString("LIB_NOM_IND_ARB") != null)?rs.getString("LIB_NOM_IND_ARB").replace(";", ""):"";
 				LIB_PRN_IND_ARB =(rs.getString("LIB_PRN_IND_ARB") != null)?rs.getString("LIB_PRN_IND_ARB").replace(";", ""):"";
-				LIB_VIL_NAI_ETU_ARB =(rs.getString("LIB_VIL_NAI_ETU_ARB") != null)?rs.getString("LIB_VIL_NAI_ETU_ARB").replace(";", ""):"";
 				COD_ANU_INA = rs.getInt("COD_ANU");
 				nationaissan =(rs.getString("nationaissan") != null)?rs.getString("nationaissan").replace(";", ""):"";
 				provadressfix =(rs.getString("provadressfix") != null)?rs.getString("provadressfix").replace(";", ""):"";
@@ -189,7 +186,6 @@ public class Individu extends Synchronizable{
 				provadressfix2 =(rs.getString("provadressfix2") != null)?rs.getString("provadressfix2").replace(";", ""):"";
 				comunadressfix2 =(rs.getString("comunadressfix2") != null)?rs.getString("comunadressfix2").replace(";", ""):"";
 				departementnaissance =(rs.getString("departementnaissance") != null)?rs.getString("departementnaissance").replace(";", ""):"";
-				paysNaissance =(rs.getString("paysnaissance") != null)?rs.getString("paysnaissance").replace(";", ""):"";
 				cod_apogee =(rs.getString("COD_ETU") != null)?rs.getString("COD_ETU").replace(";", ""):"";
 				lib_etablissement =(rs.getString("INT_1_EDI_DIP_CMP") != null)?rs.getString("INT_1_EDI_DIP_CMP").replace(";", ""):"";
 				lic_etablissement =(rs.getString("LIC_CMP") != null)?rs.getString("LIC_CMP").replace(";", ""):"";
@@ -262,53 +258,47 @@ public class Individu extends Synchronizable{
 			System.out.println("Fin Insertion Individu");
 			getConnection("mysql").close();
 			
-			/*fosuser fosuser = new fosuser();
+			FosUser fosuser = new FosUser();
 			try {
-				fosuser.Tablefosuser(dateanne, datsychr);
+				fosuser.synchronize(dateanne, datsychr);
 			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 
 			Bac bac = new Bac();
 			try {
-				bac.TableBac(dateanne, datsychr);
+				bac.synchronize(dateanne, datsychr);
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
-			etape etape = new etape();
+			Etape etape = new Etape();
 			try {
-				etape.TableEtape(dateanne, datsychr);
+				etape.synchronize(dateanne, datsychr);
 			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 
-			diplom diplom = new diplom();
+			Diplome diplom = new Diplome();
 			try {
-				diplom.Tabledip(dateanne, datsychr);
+				diplom.synchronize(dateanne, datsychr);
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
-			examen examen = new examen();
+			Examen examen = new Examen();
 			try {
-				examen.Tableexam(dateanne, datsychr);
+				examen.synchronize(dateanne, datsychr);
 			} catch (SQLException e) {
 				e.printStackTrace();
-			}*/
+			}
 
-			/*CursusAnnee cursusannee = new CursusAnnee();
+			CursusAnnee cursusannee = new CursusAnnee();
 			try {
-				System.out.println("BEGIN :  Sycn Cursus Annee");
-				cursusannee.TableCursus(dateanne, datsychr);
-				System.out.println("END :  Sycn Cursus Annee");
+				cursusannee.synchronize(dateanne, datsychr);
 			} catch (SQLException e) {
 				e.printStackTrace();
-			}*/
+			}
 
 			/*cursus cursus = new cursus();
 			try {
@@ -319,15 +309,12 @@ public class Individu extends Synchronizable{
 			
 			Cursus_v2 cursus_v2 = new Cursus_v2();
 			try {
-				cursus_v2.TableCursus(dateanne, datsychr);
+				cursus_v2.synchronize(dateanne, datsychr);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-
 		} catch (SQLException e) {
-
 			System.out.println(e.getMessage());
-
 		} finally {
 
 			if (preparedStatement != null) {

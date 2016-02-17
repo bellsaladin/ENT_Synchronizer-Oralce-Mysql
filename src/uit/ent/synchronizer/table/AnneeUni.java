@@ -1,30 +1,17 @@
 package uit.ent.synchronizer.table;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
 import uit.ent.synchronizer.Statics;
 import uit.ent.synchronizer.table.generic.Synchronizable;
 
 public class AnneeUni extends Synchronizable {
 
-	private static String query2;
-	private static ResultSet rs2;
-	private static int COD_IND;
 	private static int COD_ANU;
 	private static String ETA_ANU_IAE;
 	private static String LIB_ANU;
@@ -33,32 +20,21 @@ public class AnneeUni extends Synchronizable {
 	private static String DAT_FRM_OPI;
 	private static String ETA_ANU_IPE;
 	private static String ETA_ANU_RES;
-	private static int n;
-	private static Connection conn;
-	private static String filename = "annee_uni";
 	private static FileWriter writer;
 
-	public void TableAnueeuni(String datsychr) throws SQLException {
-
-		EntConnexion entcon = new EntConnexion();
-		Statics cc = new Statics();
+	public void synchronize(String datsychr) throws SQLException {
 
 		Connection dbConnection = null;
 		PreparedStatement preparedStatement = null;
-
-		Statement stmt = null;
-		Statement stmt1 = null;
 
 		String selectSQL = "SELECT * FROM ANNEE_UNI";
 		try {
 			preparedStatement = getConnection("oracle").prepareStatement(selectSQL);
 
-			stmt1 =  getConnection("mysql").createStatement();
+			getConnection("mysql").createStatement();
 
 			ResultSet rs = preparedStatement.executeQuery();
 
-			int i = 0;
-			n = 0;
 			try {
 				writer = new FileWriter(Statics.workingDir.replace("\\", "/")
 						+ "/ficher/annee_uni.txt", false);
@@ -79,8 +55,7 @@ public class AnneeUni extends Synchronizable {
 				String query3 = "SELECT * FROM annee_uni Where cod_anu = ?";
 				PreparedStatement prest =  getConnection("mysql").prepareStatement(query3);
 				prest.setInt(1, COD_ANU);
-				ResultSet rs2 = null;
-				rs2 = prest.executeQuery();
+				prest.executeQuery();
 
 				String texte = COD_ANU + ";" + ETA_ANU_IAE + ";" + LIB_ANU
 						+ ";" + LIC_ANU + ";" + DAT_OUV_OPI + ";" + DAT_FRM_OPI
@@ -94,10 +69,6 @@ public class AnneeUni extends Synchronizable {
 				} catch (IOException ex) {
 					ex.printStackTrace();
 				}
-
-				i++;
-
-				n++;
 			}
 
 			try {

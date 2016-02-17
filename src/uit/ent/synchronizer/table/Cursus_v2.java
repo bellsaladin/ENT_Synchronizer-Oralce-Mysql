@@ -1,22 +1,11 @@
 package uit.ent.synchronizer.table;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
 import uit.ent.synchronizer.Config;
 import uit.ent.synchronizer.Statics;
 import uit.ent.synchronizer.table.generic.Synchronizable;
@@ -25,23 +14,6 @@ public class Cursus_v2 extends Synchronizable {
 	
 	private static int nbrOfIndividusInBatch = 0;
 	
-	private static String query2;
-	private static ResultSet rs2;
-	private static String COD_IND;
-	private static String COD_ELP;
-	private static String COD_LSE;
-	private static String COD_ANU;
-	private static int COD_SES;
-	private static String id_curresu;
-	private static String LIB_ETB;
-	private static String LIB_LSE;
-	private static String NOT_ELP;
-	private static String COD_TRE;
-	private static String COD_NEL_ELP;
-	private static String COD_NEL_LSE;
-	private static String COD_ETP;
-	private static String filename = "cursus";
-
 	private static String LIS_ELP_COD_ANU;
 	private static String LIS_ELP_COD_ANU_PLUS_1;
 	private static String LIS_ELP_COD_NEL;
@@ -55,12 +27,10 @@ public class Cursus_v2 extends Synchronizable {
 	private static String not_elp;
 	private static String cod_tre_elp;
 	private static String cod_ses_elp;
-	private static String COD_NNE_IND;
-
 	private static FileWriter writer;
 	
 
-	public void TableCursus(String dateanne, String datsychr)
+	public void synchronize(String dateanne, String datsychr)
 			throws SQLException {
 		
 		int n = 0;
@@ -95,8 +65,6 @@ public class Cursus_v2 extends Synchronizable {
 		Cursus_v2.nbrOfIndividusInBatch++;
 
 		PreparedStatement preparedStatement = null;
-		Statement stmt1 = null;
-
 		String selectSQL = "SELECT LIS_ELP_COD_ANU,LIS_ELP_COD_ANU_PLUS_1,LIS_ELP_COD_NEL,RNG_ELP,LIS_ELP_LIC_NEL,LIS_ELP_COD_ELP,LIS_ELP_COD_LSE, LIS_ELP_COD_ETP,LIS_ELP_LIB_ELP,LIS_COD_IND,not_elp,cod_tre_elp,cod_ses_elp  FROM "
 				+ "(SELECT "
 				+ "ICE.COD_ANU LIS_ELP_COD_ANU,	"
@@ -157,7 +125,7 @@ public class Cursus_v2 extends Synchronizable {
 		try {
 			preparedStatement = getConnection("oracle").prepareStatement(selectSQL);
 			
-			stmt1 = getConnection("mysql").createStatement();
+			getConnection("mysql").createStatement();
 			
 			ResultSet rs = preparedStatement.executeQuery();
 
@@ -198,7 +166,6 @@ public class Cursus_v2 extends Synchronizable {
 				try {
 					writer.close();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 	
@@ -220,13 +187,12 @@ public class Cursus_v2 extends Synchronizable {
 			}
 			//System.out.println("Fin Insertion Cursus");
 			preparedStatement.close();
-
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
-			System.err.println("Exception : " + e);
+			getLogger().error("Error while Synchronizing " + getClass().getName(), e);
 			System.exit(-1); 
 		} finally {
+			
 		}
 	}
 

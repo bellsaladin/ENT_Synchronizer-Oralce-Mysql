@@ -1,177 +1,53 @@
 package uit.ent.synchronizer.table;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
 import uit.ent.synchronizer.Config;
 import uit.ent.synchronizer.Statics;
+import uit.ent.synchronizer.table.generic.Synchronizable;
 
-public class CursusAnnee {
-	private static Connection dbConnection = null;
-	
+public class CursusAnnee extends Synchronizable{
 	private static int nbrOfIndividusInBatch = 0;
-	
-	private static String DB_DRIVER;
-	private static String DB_CONNECTION;
-	private static String DB_USER;
-	private static String DB_PASSWORD;
-	private static String JDBC_DRIVER;
-	private static String DB_URL;
-	private static String USER;
-	private static String PASS;
-	private static String query2;
-	private static ResultSet rs2;
-	private static String COD_IND;
-	private static String COD_ELP;
-	private static String COD_LSE;
-	private static String COD_ANU;
-	private static int COD_SES;
-	private static String id_curresu;
-	private static String LIB_ETB;
-	private static String LIB_LSE;
-	private static String NOT_ELP;
-	private static String COD_TRE;
-	private static String COD_NEL_ELP;
-	private static String COD_NEL_LSE;
-	private static String COD_ETP;
-	private static String filename = "cursus";
-
 	private static String LIS_ELP_COD_ANU;
-	private static String LIS_ELP_COD_ANU_PLUS_1;
 	private static String LIS_ELP_LIC_NEL;
 	private static String LIS_ELP_COD_ELP;
 	private static String LIS_ELP_LIB_ELP;
 	private static String LIS_COD_IND;
-	private static String not_elp;
-	private static String cod_tre_elp;
-	private static String cod_ses_elp;
-	private static String COD_NNE_IND;
-
-	private static int n;
-	private static FileWriter writer;
-	private static String txtDate;
-
 	private static String COD_GPE_IAG;
-
 	private static String COD_ANU_IAG;
-
 	private static String COD_EXT_GPE;
-
 	private static String COD_COL;
+	private static FileWriter writer;
+	private static int n;
 
-	private static String COD_EXT_COL;
-
-	public static void TableCursus(String dateanne, String datsychr)
+	public void synchronize(String dateanne, String datsychr)
 			throws SQLException {
-
-		EntConnexion entcon = new EntConnexion();
-		Statics cc = new Statics();
-
-		DB_DRIVER = entcon.getDB_DRIVER();
-		DB_CONNECTION = entcon.getDB_CONNECTION();
-		DB_USER = entcon.getDB_USER();
-		DB_PASSWORD = entcon.getDB_PASSWORD();
-
-		JDBC_DRIVER = entcon.getJDBC_DRIVER();
-		DB_URL = entcon.getDB_URL();
-		USER = entcon.getUSER();
-		PASS = entcon.getPASS();
-
-		txtDate = new SimpleDateFormat("yyyy-MM-dd hh:m:ss", Locale.FRANCE)
-				.format(new Date());
-		
 		for(int codeIndividu: Individu.listCodesIndividus){
 			syncIndividu(codeIndividu, datsychr, dateanne);
 			System.out.println("Cursus annee :"+ n);
 			n++;
 		}
-
 	}
 
-	private static Connection getDBConnection() {
-
-		if(dbConnection != null){
-			return dbConnection;
-		}
-
-		try {
-
-			Class.forName(DB_DRIVER);
-
-		} catch (ClassNotFoundException e) {
-
-			System.out.println(e.getMessage());
-
-		}
-
-		try {
-
-			dbConnection = DriverManager.getConnection(DB_CONNECTION, DB_USER,
-					DB_PASSWORD);
-			return dbConnection;
-
-		} catch (SQLException e) {
-
-			System.out.println(e.getMessage());
-
-		}
-
-		return dbConnection;
-
-	}
-
-	public static void syncIndividu(int codeIndividu, String datsychr, String dateanne) {
-		
-		if(CursusAnnee.nbrOfIndividusInBatch == 0){ // nouveau lot d'un load infile
+	public void syncIndividu(int codeIndividu, String datsychr, String dateanne) {
+		// nouveau lot d'un load infile
+		if(CursusAnnee.nbrOfIndividusInBatch == 0){ 
 			System.out.println("Cursus annee Nouveau lot ");
 			try {
 				writer = new FileWriter(Statics.workingDir.replace("\\", "/")
 						+ "/ficher/cursusannee.txt", false);
-			} catch (IOException e1) {
-				e1.printStackTrace();
+			} catch (IOException e) {
+				getLogger().error("Error while opening file 'cursusannee.txt' ",e);
 			}
 		}
 		
 		CursusAnnee.nbrOfIndividusInBatch++;
-		
-		//System.out.println("youness (" +codeIndividu + "," + datsychr + "," + dateanne + ")"); 
-		EntConnexion entcon = new EntConnexion();
-		Statics cc = new Statics();
-
-		DB_DRIVER = entcon.getDB_DRIVER();
-		DB_CONNECTION = entcon.getDB_CONNECTION();
-		DB_USER = entcon.getDB_USER();
-		DB_PASSWORD = entcon.getDB_PASSWORD();
-
-		JDBC_DRIVER = entcon.getJDBC_DRIVER();
-		DB_URL = entcon.getDB_URL();
-		USER = entcon.getUSER();
-		PASS = entcon.getPASS();
-
-		txtDate = new SimpleDateFormat("yyyy-MM-dd hh:m:ss", Locale.FRANCE)
-				.format(new Date());
 
 		PreparedStatement preparedStatement = null;
-
-		PreparedStatement preparedStatement1 = null;
-
-		Connection mysqlConnection = null;
-		Statement stmt = null;
-		Statement stmt1 = null;
 
 		String selectSQL = "select LIS_ELP_COD_ANU,LIS_ELP_COD_ANU_PLUS_1,LIS_ELP_LIC_NEL,LIS_ELP_COD_ELP,LIS_ELP_LIB_ELP,LIS_COD_IND,not_elp,cod_tre_elp,cod_ses_elp,COD_GPE_IAG,COD_ANU_IAG,COD_EXT_GPE,COD_COL from "
 				+ "(SELECT "
@@ -236,43 +112,20 @@ public class CursusAnnee {
 		//System.out.println("youness::selectSQL : " + selectSQL);
 		try {
 			
-			dbConnection = getDBConnection();
-			preparedStatement = dbConnection.prepareStatement(selectSQL);
-			try {
-				Class.forName("com.mysql.jdbc.Driver");
-				mysqlConnection = DriverManager.getConnection(DB_URL, USER, PASS);
-				stmt1 = mysqlConnection.createStatement();
-			} catch (ClassNotFoundException e) {
-				System.out.println("Exception");
-				System.out.println(e.getMessage());
-			}
+			preparedStatement = getConnection("oracle").prepareStatement(selectSQL);
 			ResultSet rs = preparedStatement.executeQuery();
-			//System.out.println("CursusAnnee::Youness::ResultSet" + preparedStatement.toString());
-			/*try {
-				writer = new FileWriter(_Statics.workingDir.replace("\\", "/")
-						+ "/ficher/cursusannee.txt", true);
-			} catch (IOException e) {
-				System.out.println("Exception");
-				System.out.println(e.getMessage());
-			}*/
-			//System.out.println("CursusAnnee::Youness::ResultSet");
+
 			while (rs.next()) {
 				LIS_ELP_COD_ANU = rs.getString("LIS_ELP_COD_ANU");
-				LIS_ELP_COD_ANU_PLUS_1 = rs.getString("LIS_ELP_COD_ANU_PLUS_1");
 				LIS_ELP_LIC_NEL = rs.getString("LIS_ELP_LIC_NEL");
 				LIS_ELP_COD_ELP = rs.getString("LIS_ELP_COD_ELP");
 				LIS_ELP_LIB_ELP = rs.getString("LIS_ELP_LIB_ELP").replaceAll(
 						"[\r\n]+", "");
 				LIS_COD_IND = rs.getString("LIS_COD_IND");
-				not_elp = rs.getString("not_elp");
-				cod_tre_elp = rs.getString("cod_tre_elp");
-				cod_ses_elp = rs.getString("cod_ses_elp");
-				
 				COD_GPE_IAG = rs.getString("COD_GPE_IAG");
 				COD_ANU_IAG = rs.getString("COD_ANU_IAG");
 				COD_EXT_GPE = rs.getString("COD_EXT_GPE");
 				COD_COL = rs.getString("COD_COL");
-				//COD_EXT_COL = rs.getString("COD_EXT_COL");
 				
 				String texte = LIS_ELP_COD_ANU + ";" + LIS_ELP_LIC_NEL + ";"
 						+ LIS_ELP_COD_ELP + ";" + LIS_ELP_LIB_ELP + ";"
@@ -281,29 +134,25 @@ public class CursusAnnee {
 						+ COD_COL + ";"+ datsychr + " \n";
 
 				texte = texte.replace("null", "---");
-				//System.out.println(texte);
 				String stre2 = new String(texte.getBytes(Charset
 						.forName("ISO-8859-9")));
 				try {
 					writer.write(stre2, 0, stre2.length());
-					//System.out.println("Write" + stre2);
-				} catch (IOException ex) {
-					ex.printStackTrace();
-				}
-				
+				} catch (IOException e) {
+					getLogger().error("Error while writing at file 'cursusannee.txt'",e);
+				}		
 			}
 			
 			if(CursusAnnee.nbrOfIndividusInBatch == Config.LOAD_IN_FILE_BATCH_QTY || codeIndividu == Integer.valueOf(Individu.listCodesIndividus.get(Individu.listCodesIndividus.size() - 1)) ){
-				
 				try {
 					writer.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					System.err.println("Exception : " + e.getMessage());
 				}
 				
 				System.out.println("Cursus annee Insertion lot ");
 				
-				PreparedStatement statementLoadInfile = mysqlConnection
+				PreparedStatement statementLoadInfile = getConnection("mysql")
 						.prepareStatement("LOAD DATA LOCAL INFILE '"
 								+ Statics.workingDir.replace("\\", "/")
 								+ "/ficher/cursusannee.txt' "
@@ -317,18 +166,13 @@ public class CursusAnnee {
 				statementLoadInfile.close();
 				CursusAnnee.nbrOfIndividusInBatch = 0;	
 			}
-			
-			//System.out.println("Insertion Cursus");
-			
-			//System.out.println("Fin Insertion Cursus");
-
-			mysqlConnection.close();
+			preparedStatement.close();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println("Exception : " + e.getMessage());
+			getLogger().error("Error while Synchronizing " + getClass().getName(), e);
+			System.exit(-1); 
 		} finally {
-
+			
 		}
 	}
 

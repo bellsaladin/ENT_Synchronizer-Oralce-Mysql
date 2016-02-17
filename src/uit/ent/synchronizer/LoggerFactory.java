@@ -26,8 +26,7 @@ public class LoggerFactory {
 	    	logProperties.load(new FileInputStream(LOG_PROPERTIES_FILE));
 	      	PropertyConfigurator.configure(logProperties);
 	      	logger.info("Logging initialized.");
-	      	tieSystemOutAndErrToLog();
-	      	
+	      	//tieSystemOutAndErrToLog();
 	      	return logger;
 	    }
 	    catch(IOException e) {

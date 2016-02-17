@@ -26,7 +26,8 @@ import javax.swing.JTextField;
 import uit.ent.synchronizer.quartz.CronTriggerSynchonisation;
 
 public class Interface_ENT extends JFrame {
-
+	private static final long serialVersionUID = 1L;
+	
 	private static final String DB_DRIVER = "oracle.jdbc.driver.OracleDriver";
 	private static final String DB_CONNECTION = "jdbc:oracle:thin:@10.1.0.251:2001:kenitra";
 	private static final String DB_USER = "ent";
@@ -46,11 +47,7 @@ public class Interface_ENT extends JFrame {
 	private JTextField textField_2;
 	private JTextField textField_3;
 	private JTextField textField_4;
-	private String dateanne;
-
-	/**
-	 * Launch the application.
-	 */
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -142,13 +139,13 @@ public class Interface_ENT extends JFrame {
 								"Opération en cours de traitement... Merci de patienter. ");
 
 				// synchronisation a 12h
-				CronTriggerSynchonisation operation = new CronTriggerSynchonisation();
+				CronTriggerSynchonisation operation1 = new CronTriggerSynchonisation();
 				try {
 
 					periode1 = textField_1.getText();
 					min1 = textField_2.getText();
 					dateanne = textField_4.getText();
-					operation.premieresynchronisation(periode1, min1, dateanne);
+					operation1.premiereSynchronisation(periode1, min1, dateanne);
 
 					System.out.println("Demarrer : " + dateanne);
 
@@ -162,8 +159,7 @@ public class Interface_ENT extends JFrame {
 					periode2 = textField.getText();
 					min2 = textField_3.getText();
 					dateanne = textField_4.getText();
-					operation2
-							.deuxiemesynchronisation(periode2, min2, dateanne);
+					operation2.deuxiemeSynchronisation(periode2, min2, dateanne);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

@@ -1,54 +1,18 @@
 package uit.ent.synchronizer.table;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
 import uit.ent.synchronizer.Config;
 import uit.ent.synchronizer.Statics;
+import uit.ent.synchronizer.table.generic.Synchronizable;
 
-public class Cursus {
+public class Cursus extends Synchronizable{
 
 	private static int loadInFileIndividusCount = 0;
-	
-	private static String DB_DRIVER;
-	private static String DB_CONNECTION;
-	private static String DB_USER;
-	private static String DB_PASSWORD;
-	private static String JDBC_DRIVER;
-	private static String DB_URL;
-	private static String USER;
-	private static String PASS;
-	private static String query2;
-	private static ResultSet rs2;
-	private static String COD_IND;
-	private static String COD_ELP;
-	private static String COD_LSE;
-	private static String COD_ANU;
-	private static int COD_SES;
-	private static String id_curresu;
-	private static String LIB_ETB;
-	private static String LIB_LSE;
-	private static String NOT_ELP;
-	private static String COD_TRE;
-	private static String COD_NEL_ELP;
-	private static String COD_NEL_LSE;
-	private static String COD_ETP;
-	private static String filename = "cursus";
-
 	private static String LIS_ELP_COD_ANU;
 	private static String LIS_ELP_COD_ANU_PLUS_1;
 	private static String LIS_ELP_LIC_NEL;
@@ -58,72 +22,19 @@ public class Cursus {
 	private static String not_elp;
 	private static String cod_tre_elp;
 	private static String cod_ses_elp;
-	private static String COD_NNE_IND;
-
-	private static int n;
 	private static FileWriter writer;
-	private static String txtDate;
 
-	public static void TableCursus(String dateanne, String datsychr)
+	public void TableCursus(String dateanne, String datsychr)
 			throws SQLException {
-
-		EntConnexion entcon = new EntConnexion();
-		Statics cc = new Statics();
-
-		DB_DRIVER = entcon.getDB_DRIVER();
-		DB_CONNECTION = entcon.getDB_CONNECTION();
-		DB_USER = entcon.getDB_USER();
-		DB_PASSWORD = entcon.getDB_PASSWORD();
-
-		JDBC_DRIVER = entcon.getJDBC_DRIVER();
-		DB_URL = entcon.getDB_URL();
-		USER = entcon.getUSER();
-		PASS = entcon.getPASS();
-
-		txtDate = new SimpleDateFormat("yyyy-MM-dd hh:m:ss", Locale.FRANCE)
-				.format(new Date());
-		
 		
 		for(int codeIndividu: Individu.listCodesIndividus){
 			syncIndividu(codeIndividu, datsychr);
 			//System.out.println("Cursus:Individu: "  +n);
-			n++;
-
 		}
 
 	}
 
-	private static Connection getDBConnection() {
-
-		Connection dbConnection = null;
-
-		try {
-
-			Class.forName(DB_DRIVER);
-
-		} catch (ClassNotFoundException e) {
-
-			System.out.println(e.getMessage());
-
-		}
-
-		try {
-
-			dbConnection = DriverManager.getConnection(DB_CONNECTION, DB_USER,
-					DB_PASSWORD);
-			return dbConnection;
-
-		} catch (SQLException e) {
-
-			System.out.println(e.getMessage());
-
-		}
-
-		return dbConnection;
-
-	}
-
-	public static void syncIndividu(int codeIndividu, String datsychr) {
+	public void syncIndividu(int codeIndividu, String datsychr) {
 		
 		if(Cursus.loadInFileIndividusCount == 0){ // nouveau lot d'un load infile
 			System.out.println("Cursus Nouveau lot ");
@@ -136,32 +47,9 @@ public class Cursus {
 		}
 		
 		Cursus.loadInFileIndividusCount++;
-		
-		EntConnexion entcon = new EntConnexion();
-		Statics cc = new Statics();
 
-		DB_DRIVER = entcon.getDB_DRIVER();
-		DB_CONNECTION = entcon.getDB_CONNECTION();
-		DB_USER = entcon.getDB_USER();
-		DB_PASSWORD = entcon.getDB_PASSWORD();
-
-		JDBC_DRIVER = entcon.getJDBC_DRIVER();
-		DB_URL = entcon.getDB_URL();
-		USER = entcon.getUSER();
-		PASS = entcon.getPASS();
-
-		txtDate = new SimpleDateFormat("yyyy-MM-dd hh:m:ss", Locale.FRANCE)
-				.format(new Date());
-
-		Connection dbConnection = null;
 		PreparedStatement preparedStatement = null;
-
-		PreparedStatement preparedStatement1 = null;
-
-		Connection conn = null;
-		Statement stmt = null;
-		Statement stmt1 = null;
-
+		
 		String selectSQL = "select LIS_ELP_COD_ANU,LIS_ELP_COD_ANU_PLUS_1,LIS_ELP_LIC_NEL,LIS_ELP_COD_ELP,LIS_ELP_LIB_ELP,LIS_COD_IND,not_elp,cod_tre_elp,cod_ses_elp from "
 				+ "(SELECT "
 				+ "ICE.COD_ANU LIS_ELP_COD_ANU,	"
@@ -212,15 +100,7 @@ public class Cursus {
 				+ "ORDER BY  LIS_ELP_COD_ELP ASC";
 		System.out.println("Cursus:selectSQL:" + selectSQL);
 		try {
-			dbConnection = getDBConnection();
-			preparedStatement = dbConnection.prepareStatement(selectSQL);
-			try {
-				Class.forName("com.mysql.jdbc.Driver");
-				conn = DriverManager.getConnection(DB_URL, USER, PASS);
-				stmt1 = conn.createStatement();
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}
+			preparedStatement = getConnection("oracle").prepareStatement(selectSQL);
 			ResultSet rs = preparedStatement.executeQuery();
 
 			while (rs.next()) {
@@ -264,7 +144,7 @@ public class Cursus {
 	
 				System.out.println("Cursus Insertion lot ");
 				
-				PreparedStatement Pindividu = conn
+				PreparedStatement Pindividu = getConnection("mysql")
 						.prepareStatement("LOAD DATA LOCAL INFILE '"
 								+ Statics.workingDir.replace("\\", "/")
 								+ "/ficher/cursus.txt' "
@@ -279,7 +159,8 @@ public class Cursus {
 			}
 			//System.out.println("Fin Insertion Cursus");
 			
-			conn.close();
+			closeConnection("oracle");
+			closeConnection("mysql");
 
 		} catch (SQLException e) {
 			e.printStackTrace();

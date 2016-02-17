@@ -11,8 +11,8 @@ import uit.ent.synchronizer.Statics;
 
 public class Synchronizable {
 	
-	protected Connection _connection_mysql;
-	protected Connection _connection_oracle;
+	protected static Connection _connection_mysql;
+	protected static Connection _connection_oracle;
 
 	
 	public Synchronizable(){
@@ -44,47 +44,35 @@ public class Synchronizable {
 				_connection_mysql.close();
 			}
 		} catch (SQLException e) {
-			System.err.println("Error closing '" + type + "' connection");
-			System.err.println(e);
+			getLogger().error("Error while closing '" + type + "' connection %n", e);
 		}
 	}
 	
 	private Connection getMysqlConnection(){
-		if(_connection_mysql != null)
-			return _connection_mysql;
-		
 		try {
+			if(_connection_mysql != null && !_connection_mysql.isClosed())
+				return _connection_mysql;
 			Class.forName(Statics.DB_MYSQL_DRIVER);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		try {
 			_connection_mysql = DriverManager.getConnection(Statics.DB_MYSQL_URL, Statics.DB_MYSQL_USER, Statics.DB_MYSQL_PASSWORD);
 			return _connection_mysql;
-		} catch (SQLException e) {
-			getLogger().error("Mysql Connection Error !", e);
-			e.printStackTrace();
+		}
+		catch (Exception e) {
+			getLogger().error("Error while connecting to mysql %n", e);
 		}
 		return null;
 	}
 	
 	private Connection getOracleConnection() {
-		if(_connection_oracle != null)
-			return _connection_oracle;
 		
 		try {
+			if(_connection_oracle != null && !_connection_oracle.isClosed())
+				return _connection_oracle;
 			Class.forName(Statics.DB_ORACLE_DRIVER);
-		} catch (ClassNotFoundException e) {
-			getLogger().error(e.getMessage());
-			e.printStackTrace();
-		}
-		try {
 			_connection_oracle = DriverManager.getConnection(Statics.DB_ORACLE_CONNECTION, Statics.DB_ORACLE_USER,
 					Statics.DB_ORACLE_PASSWORD);
 			return _connection_oracle;
-		} catch (SQLException e) {
-			getLogger().error("Oracle Connection Error !", e);
-			e.printStackTrace();
+		} catch (Exception e) {
+			getLogger().error("Error while connecting to oracle %n", e);
 		}
 		return null;
 	}
