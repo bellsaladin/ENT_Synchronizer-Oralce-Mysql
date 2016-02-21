@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import uit.ent.synchronizer.Statics;
+import uit.ent.synchronizer.Config;
 import uit.ent.synchronizer.table.generic.Synchronizable;
 
 public class Synchronisation extends Synchronizable{
@@ -21,7 +21,7 @@ public class Synchronisation extends Synchronizable{
 				.format(new Date());
 		System.out.println("Date de synchronisation : " + synchronisationDate);
 		try {
-			writer = new FileWriter(Statics.workingDir.replace("\\", "/")
+			writer = new FileWriter(Config.workingDir.replace("\\", "/")
 					+ "/ficher/datesynch.txt", false);
 		} catch (IOException e1) {
 			e1.printStackTrace();
@@ -44,7 +44,7 @@ public class Synchronisation extends Synchronizable{
 		
 		PreparedStatement Pindividu = getConnection("mysql")
 				.prepareStatement("LOAD DATA LOCAL INFILE '"
-						+ Statics.workingDir.replace("\\", "/")
+						+ Config.workingDir.replace("\\", "/")
 						+ "/ficher/datesynch.txt' " + "INTO TABLE datesynch "
 						+ "FIELDS " + "TERMINATED BY ';' "
 						+ "ESCAPED BY '\\\\' LINES STARTING BY '' "

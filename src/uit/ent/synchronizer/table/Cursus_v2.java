@@ -7,7 +7,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import uit.ent.synchronizer.Config;
-import uit.ent.synchronizer.Statics;
 import uit.ent.synchronizer.table.generic.Synchronizable;
 
 public class Cursus_v2 extends Synchronizable {
@@ -55,7 +54,7 @@ public class Cursus_v2 extends Synchronizable {
 		if(Cursus_v2.nbrOfIndividusInBatch == 0){ // nouveau batch(lot) d'un load infile
 			System.out.println("Cursus : New Batch ");
 			try {
-				writer = new FileWriter(Statics.workingDir.replace("\\", "/")
+				writer = new FileWriter(Config.workingDir.replace("\\", "/")
 						+ "/ficher/cursus_v2.txt", false);
 			} catch (IOException e1) {
 				e1.printStackTrace();
@@ -173,7 +172,7 @@ public class Cursus_v2 extends Synchronizable {
 				
 				PreparedStatement statementLoadInfile = getConnection("mysql")
 						.prepareStatement("LOAD DATA LOCAL INFILE '"
-								+ Statics.workingDir.replace("\\", "/")
+								+ Config.workingDir.replace("\\", "/")
 								+ "/ficher/cursus_v2.txt' "
 								+ "INTO TABLE cursusresultat_v2 "
 								+ "FIELDS "

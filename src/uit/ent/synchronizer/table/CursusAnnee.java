@@ -7,7 +7,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import uit.ent.synchronizer.Config;
-import uit.ent.synchronizer.Statics;
 import uit.ent.synchronizer.table.generic.Synchronizable;
 
 public class CursusAnnee extends Synchronizable{
@@ -38,7 +37,7 @@ public class CursusAnnee extends Synchronizable{
 		if(CursusAnnee.nbrOfIndividusInBatch == 0){ 
 			System.out.println("Cursus annee Nouveau lot ");
 			try {
-				writer = new FileWriter(Statics.workingDir.replace("\\", "/")
+				writer = new FileWriter(Config.workingDir.replace("\\", "/")
 						+ "/ficher/cursusannee.txt", false);
 			} catch (IOException e) {
 				getLogger().error("Error while opening file 'cursusannee.txt' ",e);
@@ -154,7 +153,7 @@ public class CursusAnnee extends Synchronizable{
 				
 				PreparedStatement statementLoadInfile = getConnection("mysql")
 						.prepareStatement("LOAD DATA LOCAL INFILE '"
-								+ Statics.workingDir.replace("\\", "/")
+								+ Config.workingDir.replace("\\", "/")
 								+ "/ficher/cursusannee.txt' "
 								+ "INTO TABLE cursusannee "
 								+ "FIELDS "

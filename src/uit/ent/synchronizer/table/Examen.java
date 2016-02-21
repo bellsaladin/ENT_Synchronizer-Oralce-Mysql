@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import uit.ent.synchronizer.Statics;
+import uit.ent.synchronizer.Config;
 import uit.ent.synchronizer.table.generic.Synchronizable;
 
 public class Examen extends Synchronizable{
@@ -54,7 +54,6 @@ public class Examen extends Synchronizable{
 		dateFinStr   = new SimpleDateFormat("yyyy-MM-dd").format(dateFin);
 
 		System.out.println("Examen - Filtre [ Date Debut / Date Fin ] :  [ " + dateDebutStr + " / " + dateFinStr);
-		System.out.println("Examen - Filtre Date Fin :  " + dateFin);
 
 		PreparedStatement preparedStatement = null;
 
@@ -92,7 +91,7 @@ public class Examen extends Synchronizable{
 
 			ResultSet rs = preparedStatement.executeQuery();
 			try {
-				writer = new FileWriter(Statics.workingDir.replace("\\", "/")
+				writer = new FileWriter(Config.workingDir.replace("\\", "/")
 						+ "/ficher/examen.txt", false);
 			} catch (IOException e1) {
 				e1.printStackTrace();
@@ -141,7 +140,7 @@ public class Examen extends Synchronizable{
 			System.out.println("Insertion examen");
 			PreparedStatement loadInfileStatement = getConnection("mysql")
 					.prepareStatement("LOAD DATA LOCAL INFILE '"
-							+ Statics.workingDir.replace("\\", "/")
+							+ Config.workingDir.replace("\\", "/")
 							+ "/ficher/examen.txt' "
 							+ "INTO TABLE examen "
 							+ "FIELDS "

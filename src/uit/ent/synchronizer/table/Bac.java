@@ -6,7 +6,7 @@ import java.nio.charset.Charset;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import uit.ent.synchronizer.Statics;
+import uit.ent.synchronizer.Config;
 import uit.ent.synchronizer.table.generic.Synchronizable;
 
 public class Bac extends Synchronizable{
@@ -50,7 +50,7 @@ public class Bac extends Synchronizable{
 			ResultSet rs = preparedStatement.executeQuery();
 
 			try {
-				writer = new FileWriter(Statics.workingDir.replace("\\", "/")
+				writer = new FileWriter(Config.workingDir.replace("\\", "/")
 						+ "/ficher/Bac.txt", false);
 			} catch (IOException e1) {
 				e1.printStackTrace();
@@ -92,7 +92,7 @@ public class Bac extends Synchronizable{
 			System.out.println("Insertion Bac");
 			PreparedStatement Pindividu = getConnection("mysql")
 					.prepareStatement("LOAD DATA LOCAL INFILE '"
-							+ Statics.workingDir.replace("\\", "/")
+							+ Config.workingDir.replace("\\", "/")
 							+ "/ficher/Bac.txt' "
 							+ "INTO TABLE bac "
 							+ "FIELDS "

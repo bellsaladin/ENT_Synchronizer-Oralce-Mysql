@@ -9,7 +9,8 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import uit.ent.synchronizer.Statics;
+
+import uit.ent.synchronizer.Config;
 import uit.ent.synchronizer.table.generic.Synchronizable;
 
 public class FosUser extends Synchronizable {
@@ -36,7 +37,7 @@ public class FosUser extends Synchronizable {
 
 			ResultSet rs = preparedStatement.executeQuery();
 			try {
-				writer = new FileWriter(Statics.workingDir.replace("\\", "/")
+				writer = new FileWriter(Config.workingDir.replace("\\", "/")
 						+ "/ficher/fos_user.txt", false);
 			} catch (IOException e1) {
 				e1.printStackTrace();
@@ -71,7 +72,7 @@ public class FosUser extends Synchronizable {
 
 			PreparedStatement loadInFileStatement = getConnection("mysql")
 					.prepareStatement("LOAD DATA LOCAL INFILE '"
-							+ Statics.workingDir.replace("\\", "/")
+							+ Config.workingDir.replace("\\", "/")
 							+ "/ficher/fos_user.txt' "
 							+ "INTO TABLE fos_user "
 							+ "FIELDS "

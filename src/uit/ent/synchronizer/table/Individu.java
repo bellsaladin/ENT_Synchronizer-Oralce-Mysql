@@ -9,13 +9,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import uit.ent.synchronizer.Config;
-import uit.ent.synchronizer.Statics;
 import uit.ent.synchronizer.table.generic.Synchronizable;
 
 public class Individu extends Synchronizable{
 
 	public static List<Integer> listCodesIndividus = new ArrayList<Integer>();
-	
 	private static int    COD_IND;
 	private static String CIN_IND;
 	private static String LIB_NOM_PAT_IND;
@@ -142,7 +140,7 @@ public class Individu extends Synchronizable{
 			ResultSet rs = preparedStatement.executeQuery();
 			int i = 0;
 			try {
-				writer = new FileWriter(Statics.workingDir.replace("\\", "/")
+				writer = new FileWriter(Config.workingDir.replace("\\", "/")
 						+ "/ficher/individu.txt", false);
 			} catch (IOException e1) {
 				e1.printStackTrace();
@@ -246,7 +244,7 @@ public class Individu extends Synchronizable{
 			System.out.println("Insertion Individu");
 			PreparedStatement loadInFileStatement = getConnection("mysql")
 					.prepareStatement("LOAD DATA LOCAL INFILE '"
-							+ Statics.workingDir.replace("\\", "/")
+							+ Config.workingDir.replace("\\", "/")
 							+ "/ficher/individu.txt' "
 							+ "INTO TABLE individu "
 							+ "FIELDS "
@@ -258,7 +256,7 @@ public class Individu extends Synchronizable{
 			System.out.println("Fin Insertion Individu");
 			getConnection("mysql").close();
 			
-			FosUser fosuser = new FosUser();
+			/* FosUser fosuser = new FosUser();
 			try {
 				fosuser.synchronize(dateanne, datsychr);
 			} catch (SQLException e1) {
@@ -298,7 +296,7 @@ public class Individu extends Synchronizable{
 				cursusannee.synchronize(dateanne, datsychr);
 			} catch (SQLException e) {
 				e.printStackTrace();
-			}
+			} */
 
 			/*cursus cursus = new cursus();
 			try {
@@ -313,18 +311,11 @@ public class Individu extends Synchronizable{
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
+			preparedStatement.close();			
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		} finally {
-
-			if (preparedStatement != null) {
-				try {
-					preparedStatement.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-
+			
 		}
 
 	}

@@ -6,7 +6,7 @@ import java.nio.charset.Charset;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import uit.ent.synchronizer.Statics;
+import uit.ent.synchronizer.Config;
 import uit.ent.synchronizer.table.generic.Synchronizable;
 
 public class Etape extends Synchronizable{
@@ -40,7 +40,7 @@ public class Etape extends Synchronizable{
 			ResultSet rs = preparedStatement.executeQuery();
 			
 			try {
-				writer = new FileWriter(Statics.workingDir.replace("\\", "/")
+				writer = new FileWriter(Config.workingDir.replace("\\", "/")
 						+ "/ficher/etape.txt", false);
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
@@ -79,7 +79,7 @@ public class Etape extends Synchronizable{
 			System.out.println("Insertion etape");
 			PreparedStatement Pindividu = getConnection("mysql")
 					.prepareStatement("LOAD DATA LOCAL INFILE '"
-							+ Statics.workingDir.replace("\\", "/")
+							+ Config.workingDir.replace("\\", "/")
 							+ "/ficher/etape.txt' "
 							+ "INTO TABLE etape "
 							+ "FIELDS "

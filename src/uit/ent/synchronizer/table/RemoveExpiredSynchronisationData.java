@@ -53,7 +53,7 @@ public class RemoveExpiredSynchronisationData extends Synchronizable {
 			System.out.println("Données d'anciennes synchronisations supprimées avec succès !");
 			
 		} catch (Exception e) {
-			getLogger().error("Erreur lors de la suppression des données de synchronisation",e);
+			getLogger().error("Erreur lors de la suppression des données de synchronisation %n",e);
 		}
 	}
 }
