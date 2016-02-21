@@ -33,7 +33,7 @@ public class Execution extends Synchronizable implements Job
 		}
 		
 		try {
-			statementActivateSynchronisation = getConnection("mysql").prepareStatement("UPDATE datesynch SET etat = 1 WHERE id = (Select max(id) From datesynch)");
+			statementActivateSynchronisation = getConnection("mysql").prepareStatement("UPDATE datesynch SET etat = 1 WHERE date = '" +  Synchronisation.synchronisationDate + "'");
 					statementActivateSynchronisation.executeUpdate();
 		} catch (SQLException e) {
 			getLogger().error("Update datesync", e);
